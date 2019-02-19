@@ -1,23 +1,25 @@
-package com.etsi;
+package com.chatman;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.transition.TransitionManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.etsi.helper.FirebaseHelper;
-import com.etsi.helper.PreferencesHelper;
-import com.etsi.model.Kreator;
-import com.etsi.model.Sobat;
+import com.bumptech.glide.Glide;
+import com.chatman.helper.FirebaseHelper;
+import com.chatman.helper.PreferencesHelper;
+import com.chatman.model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -29,8 +31,6 @@ public class AuthActivity extends AppCompatActivity {
 
     // view component
     private LinearLayout authContainer;
-    private CardView nameContainer;
-    private CardView confirmContainer;
     private EditText emailEditText;
     private EditText passwordEditText;
     private EditText confirmEditText;
@@ -38,6 +38,8 @@ public class AuthActivity extends AppCompatActivity {
     private Button loginButton;
     private Button registerButton;
     private TextView switchTextView;
+    private ImageView authImageView;
+    private Context context;
 
 
     // activity state
@@ -49,6 +51,7 @@ public class AuthActivity extends AppCompatActivity {
         setContentView(R.layout.activity_auth);
         bindView();
         switchToLogin();
+        context = this;
     }
 
     // bind all component view with it's xml
@@ -61,66 +64,37 @@ public class AuthActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.auth_login);
         registerButton = findViewById(R.id.auth_register);
         switchTextView = findViewById(R.id.auth_switch);
+        authImageView = findViewById(R.id.auth_logo);
+        Glide.with(this).load(getImage("logo")).fitCenter().into(authImageView);
     }
 
     // do login
-    public void login(View view) {
+    public void login(final View view) {
         final String email = emailEditText.getText().toString().trim();
         final String password = passwordEditText.getText().toString().trim();
 
-        if (email.endsWith("@etsi.com")) {
-            FirebaseHelper.dbKreator.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (!loginAsKreator(dataSnapshot, email, password)) {
-                        Toast.makeText(AuthActivity.this, "Email dan password tidak benar", Toast.LENGTH_SHORT).show();
-                    } else {
-
-                    }
+        FirebaseHelper.dbUser.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!loginAsUser(dataSnapshot, email, password)) {
+                    showSnackBar((AuthActivity)view.getContext(), "Email or password is incorrect!");
                 }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        } else {
-            FirebaseHelper.dbSobat.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (!loginAsSobat(dataSnapshot, email, password)) {
-                        Toast.makeText(AuthActivity.this, "Email dan password tidak benar", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        }
-    }
-
-    private boolean loginAsKreator(DataSnapshot dataSnapshot, String email, String password) {
-        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-            Kreator kreator = ds.getValue(Kreator.class);
-            if (kreator.getEmail().equals(email) && kreator.getPassword().equals(md5(password))) {
-                PreferencesHelper.setUserFirebaseKey(this, ds.getKey());
-                PreferencesHelper.setCurrentKreatorKey(ds.getKey());
-                PreferencesHelper.setUserRole(this, PreferencesHelper.USER_ROLE_KREATOR);
-                startActivity(new Intent(this, MainActivity.class));
-                return true;
             }
-        }
-        return false;
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
-    private boolean loginAsSobat(DataSnapshot dataSnapshot, String email, String password) {
+    private boolean loginAsUser(DataSnapshot dataSnapshot, String email, String password) {
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
-            Sobat sobat = ds.getValue(Sobat.class);
-            if (sobat.getEmail().equals(email) && sobat.getPassword().equals(md5(password))) {
+            User user = ds.getValue(User.class);
+            if (user.getEmail().equals(email) && user.getPassword().equals(md5(password))) {
                 PreferencesHelper.setUserFirebaseKey(this, ds.getKey());
-                PreferencesHelper.setUserRole(this, PreferencesHelper.USER_ROLE_SOBAT);
+                PreferencesHelper.setUserName(this, user.getName());
                 startActivity(new Intent(this, MainActivity.class));
                 return true;
             }
@@ -132,7 +106,7 @@ public class AuthActivity extends AppCompatActivity {
         final String MD5 = "MD5";
         try {
             // Create MD5 Hash
-            MessageDigest digest = java.security.MessageDigest.getInstance(MD5);
+            MessageDigest digest = MessageDigest.getInstance(MD5);
             digest.update(s.getBytes());
             byte messageDigest[] = digest.digest();
 
@@ -155,31 +129,44 @@ public class AuthActivity extends AppCompatActivity {
     // do register
     public void register(View view) {
         String name = nameEditText.getText().toString().trim();
-        String email = emailEditText.getText().toString().trim();
+        final String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
         String confirm = confirmEditText.getText().toString().trim();
 
-        if (!password.equals(confirm)) {
-            Toast.makeText(this, "Konfirmasi password tidak cocok", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        if (password.equals(confirm)) {
+            final boolean[] emailUnique = new boolean[] {true};
+            FirebaseHelper.dbUser.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        User user = ds.getValue(User.class);
+                        if (user.getEmail().equalsIgnoreCase(email)) {
+                            emailUnique[0] = false;
+                        }
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) { }
+            });
 
-        if (email.endsWith("@etsi.com")) {
-            String key = FirebaseHelper.dbKreator.push().getKey();
-            Kreator kreator = new Kreator(key, name, email, md5(password));
-            kreator.setKey(key);
-            PreferencesHelper.setUserRole(this, PreferencesHelper.USER_ROLE_KREATOR);
-            PreferencesHelper.setUserFirebaseKey(this, key);
-            FirebaseHelper.dbKreator.child(key).setValue(kreator);
+            if (emailUnique[0]) {
+                String key = FirebaseHelper.dbUser.push().getKey();
+                User user = new User(key, name, email, md5(password));
+                user.setKey(key);
+                PreferencesHelper.setUserFirebaseKey(this, key);
+                PreferencesHelper.setUserName(this, user.getName());
+
+                FirebaseHelper.dbUser.child(key).setValue(user);
+
+
+                finish();
+                startActivity(new Intent(this, MainActivity.class));
+            } else {
+                showSnackBar(this, "Email has been used");
+            }
         } else {
-            String key = FirebaseHelper.dbSobat.push().getKey();
-            Sobat sobat = new Sobat(key, name, email, md5(password));
-            sobat.setKey(key);
-            PreferencesHelper.setUserRole(this, PreferencesHelper.USER_ROLE_SOBAT);
-            PreferencesHelper.setUserFirebaseKey(this, key);
-            FirebaseHelper.dbSobat.child(key).setValue(sobat);
+            showSnackBar(this, "Password did not match");
         }
-        startActivity(new Intent(this, MainActivity.class));
     }
 
     // switch between login and register
@@ -208,5 +195,17 @@ public class AuthActivity extends AppCompatActivity {
         loginButton.setVisibility(View.GONE);
         registerButton.setVisibility(View.VISIBLE);
         switchTextView.setText(getString(R.string.login));
+    }
+
+    public int getImage(String imageName) {
+
+        int drawableResourceId = this.getResources().getIdentifier(imageName, "drawable", this.getPackageName());
+
+        return drawableResourceId;
+    }
+
+    public void showSnackBar(Activity activity, String message){
+        View rootView = activity.getWindow().getDecorView().findViewById(android.R.id.content);
+        Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT).show();
     }
 }
