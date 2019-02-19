@@ -24,9 +24,10 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="300dp"
-                android:layout_height="100dp"
-                android:src="@drawable/logo" />
+                android:id="@+id/auth_logo"
+                android:layout_width="250dp"
+                android:layout_height="120dp"
+                android:scaleType="fitCenter"/>
 
         </LinearLayout>
 
@@ -67,8 +68,6 @@
                 android:layout_margin="3dp"
                 android:hint="@string/confirm"
                 android:inputType="textPassword" />
-
-            <!-- TODO: add role checkbox -->
 
             <Button
                 android:id="@+id/auth_login"
