@@ -1,10 +1,13 @@
 package com.chatman;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,10 +18,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.chatman.adapter.ChatListAdapter;
 import com.chatman.helper.PreferencesHelper;
+import com.chatman.model.ChatList;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private RecyclerView recycler;
+    private ChatListAdapter adapter;
+    private List<ChatList> chatLists;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,15 +39,18 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        context = this;
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        // Recycler View
+        recycler = findViewById(R.id.chat_list_rv);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        recycler.setLayoutManager(linearLayoutManager);
+        getChatLists();
+        adapter = new ChatListAdapter(chatLists);
+        recycler.setAdapter(adapter);
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -52,7 +68,6 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-//            super.onBackPressed();
             this.moveTaskToBack(true);
         }
     }
@@ -99,5 +114,71 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    // Todo: Ganti data dummmy jadi data asli ngambil dari database
+    private List<ChatList> getChatLists() {
+        chatLists = new ArrayList<>();
+        chatLists.add(new ChatList(
+                R.drawable.priagung,
+                "Priagung Satyagama",
+                "Woi sini ke sekre 2 temani diriku yang kesepian"
+        ));
+        chatLists.add(new ChatList(
+                R.drawable.rama,
+                "Yusuf Rahmat Pratama",
+                "Eh, gmn gmn?"
+        ));
+        chatLists.add(new ChatList(
+                R.drawable.priagung,
+                "Priagung Satyagama",
+                "Woi sini ke sekre 2 temani diriku yang kesepian"
+        ));
+        chatLists.add(new ChatList(
+                R.drawable.rama,
+                "Yusuf Rahmat Pratama",
+                "Eh, gmn gmn?"
+        ));
+        chatLists.add(new ChatList(
+                R.drawable.priagung,
+                "Priagung Satyagama",
+                "Woi sini ke sekre 2 temani diriku yang kesepian"
+        ));
+        chatLists.add(new ChatList(
+                R.drawable.rama,
+                "Yusuf Rahmat Pratama",
+                "Eh, gmn gmn?"
+        ));
+        chatLists.add(new ChatList(
+                R.drawable.priagung,
+                "Priagung Satyagama",
+                "Woi sini ke sekre 2 temani diriku yang kesepian"
+        ));
+        chatLists.add(new ChatList(
+                R.drawable.rama,
+                "Yusuf Rahmat Pratama",
+                "Eh, gmn gmn?"
+        ));
+        chatLists.add(new ChatList(
+                R.drawable.priagung,
+                "Priagung Satyagama",
+                "Woi sini ke sekre 2 temani diriku yang kesepian"
+        ));
+        chatLists.add(new ChatList(
+                R.drawable.rama,
+                "Yusuf Rahmat Pratama",
+                "Eh, gmn gmn?"
+        ));
+        chatLists.add(new ChatList(
+                R.drawable.priagung,
+                "Priagung Satyagama",
+                "Woi sini ke sekre 2 temani diriku yang kesepian"
+        ));
+        chatLists.add(new ChatList(
+                R.drawable.rama,
+                "Yusuf Rahmat Pratama",
+                "Eh, gmn gmn?"
+        ));
+        return chatLists;
     }
 }
