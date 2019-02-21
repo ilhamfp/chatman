@@ -40,6 +40,7 @@ public class AuthActivity extends AppCompatActivity {
     private TextView switchTextView;
     private ImageView authImageView;
     private Context context;
+    private TextView authTextView;
 
 
     // activity state
@@ -48,10 +49,15 @@ public class AuthActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_auth);
-        bindView();
-        switchToLogin();
-        context = this;
+        if (PreferencesHelper.getHasLogin(this)){
+            finish();
+            startActivity(new Intent(this, MainActivity.class));
+        } else {
+            setContentView(R.layout.activity_auth);
+            bindView();
+            switchToLogin();
+            context = this;
+        }
     }
 
     // bind all component view with it's xml
@@ -65,6 +71,7 @@ public class AuthActivity extends AppCompatActivity {
         registerButton = findViewById(R.id.auth_register);
         switchTextView = findViewById(R.id.auth_switch);
         authImageView = findViewById(R.id.auth_logo);
+        authTextView = findViewById(R.id.auth_word);
         Glide.with(this).load(getImage("logo")).fitCenter().into(authImageView);
     }
 
@@ -95,6 +102,8 @@ public class AuthActivity extends AppCompatActivity {
             if (user.getEmail().equals(email) && user.getPassword().equals(md5(password))) {
                 PreferencesHelper.setUserFirebaseKey(this, ds.getKey());
                 PreferencesHelper.setUserName(this, user.getName());
+                PreferencesHelper.setHasLogin(this, true);
+                finish();
                 startActivity(new Intent(this, MainActivity.class));
                 return true;
             }
@@ -149,12 +158,13 @@ public class AuthActivity extends AppCompatActivity {
                 public void onCancelled(@NonNull DatabaseError databaseError) { }
             });
 
-            if (emailUnique[0]) {
+            if (emailUnique[0] && !name.equals("") && !email.equals("") && !password.equals("") && !confirm.equals("") ) {
                 String key = FirebaseHelper.dbUser.push().getKey();
                 User user = new User(key, name, email, md5(password));
                 user.setKey(key);
                 PreferencesHelper.setUserFirebaseKey(this, key);
                 PreferencesHelper.setUserName(this, user.getName());
+                PreferencesHelper.setHasLogin(this, true);
 
                 FirebaseHelper.dbUser.child(key).setValue(user);
 
@@ -185,6 +195,7 @@ public class AuthActivity extends AppCompatActivity {
         confirmEditText.setVisibility(View.GONE);
         loginButton.setVisibility(View.VISIBLE);
         registerButton.setVisibility(View.GONE);
+        authTextView.setText(R.string.register_word);
         switchTextView.setText(getString(R.string.register));
     }
 
@@ -195,6 +206,8 @@ public class AuthActivity extends AppCompatActivity {
         loginButton.setVisibility(View.GONE);
         registerButton.setVisibility(View.VISIBLE);
         switchTextView.setText(getString(R.string.login));
+        authTextView.setText(getString(R.string.login_word));
+
     }
 
     public int getImage(String imageName) {

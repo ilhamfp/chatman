@@ -15,5 +15,6 @@
     <string name="login">Masuk</string>
     <string name="register">Daftar</string>
     <string name="register_word">Belum punya akun?</string>
+    <string name="login_word">Sudah memiliki akun?</string>
 </resources>
 

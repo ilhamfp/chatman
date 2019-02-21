@@ -90,6 +90,8 @@ public class MainActivity extends AppCompatActivity
             navigationBarIntent = new Intent(MainActivity.this, AuthActivity.class);
             PreferencesHelper.setUserFirebaseKey(this, "");
             PreferencesHelper.setUserName(this,"");
+            PreferencesHelper.setHasLogin(this, false);
+
             finish();
             startActivity(navigationBarIntent);
         }
