@@ -1,6 +1,10 @@
 package com.chatman.adapter;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +14,7 @@ import android.widget.TextView;
 
 
 import com.bumptech.glide.Glide;
+import com.chatman.MainActivity;
 import com.chatman.R;
 import com.chatman.model.ChatList;
 
@@ -51,7 +56,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
         return items.size();
     }
 
-    public class ChatListHolder extends RecyclerView.ViewHolder {
+    public class ChatListHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView chatListName;
         private TextView chatListLastMessage;
@@ -73,5 +78,24 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
             chatListLastMessage.setText(item.getLastMessage());
             chatListName.setText(item.getName());
         }
+
+        @Override
+        public void onClick(View view) {
+//            AppCompatActivity activity = (AppCompatActivity) view.getContext();
+//            Fragment myFragment = new MyFragment();
+//            activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();
+        }
+
+//        public boolean loadFragment(Fragment fragment) {
+//            switching fragment
+//            if (fragment != null) {
+//                ((MainActivity) getActivity())getSupportFragmentManager()
+//                        .beginTransaction()
+//                        .replace(R.id.fragment_container, fragment)
+//                        .commit();
+//                return true;
+//            }
+//            return false;
+//        }
     }
 }

@@ -19,5 +19,8 @@
     <string name="register">Daftar</string>
     <string name="register_word">Belum punya akun?</string>
     <string name="login_word">Sudah memiliki akun?</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
 
