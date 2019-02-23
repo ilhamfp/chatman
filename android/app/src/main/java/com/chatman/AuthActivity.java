@@ -20,9 +20,13 @@ import com.bumptech.glide.Glide;
 import com.chatman.helper.FirebaseHelper;
 import com.chatman.helper.PreferencesHelper;
 import com.chatman.model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -137,9 +141,9 @@ public class AuthActivity extends AppCompatActivity {
 
     // do register
     public void register(View view) {
-        String name = nameEditText.getText().toString().trim();
+        final String name = nameEditText.getText().toString().trim();
         final String email = emailEditText.getText().toString().trim();
-        String password = passwordEditText.getText().toString().trim();
+        final String password = passwordEditText.getText().toString().trim();
         String confirm = confirmEditText.getText().toString().trim();
 
         if (password.equals(confirm)) {
@@ -159,18 +163,23 @@ public class AuthActivity extends AppCompatActivity {
             });
 
             if (emailUnique[0] && !name.equals("") && !email.equals("") && !password.equals("") && !confirm.equals("") ) {
-                String key = FirebaseHelper.dbUser.push().getKey();
-                User user = new User(key, name, email, md5(password));
-                user.setKey(key);
-                PreferencesHelper.setUserFirebaseKey(this, key);
-                PreferencesHelper.setUserName(this, user.getName());
-                PreferencesHelper.setHasLogin(this, true);
+                FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        String key = FirebaseHelper.dbUser.push().getKey();
+                        String instanceId = task.getResult().getToken();
+                        User user;
+                        user = new User(instanceId, name, email, md5(password));
+                        user.setKey(instanceId);
+                        PreferencesHelper.setUserFirebaseKey(AuthActivity.this, key);
+                        PreferencesHelper.setUserName(AuthActivity.this, user.getName());
+                        PreferencesHelper.setHasLogin(AuthActivity.this, true);
 
-                FirebaseHelper.dbUser.child(key).setValue(user);
-
-
-                finish();
-                startActivity(new Intent(this, MainActivity.class));
+                        FirebaseHelper.dbUser.child(key).setValue(user);
+                        finish();
+                        startActivity(new Intent(AuthActivity.this, MainActivity.class));
+                    }
+                });
             } else {
                 showSnackBar(this, "Email has been used");
             }
