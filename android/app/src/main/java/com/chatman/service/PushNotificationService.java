@@ -7,12 +7,16 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.chatman.MainActivity;
@@ -84,11 +88,15 @@ public class PushNotificationService extends FirebaseMessagingService {
                         PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Build the notification with all of the parameters.
+        Drawable drawable= ContextCompat.getDrawable(this,R.mipmap.chatman_launcher_round);
+        Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
+
         NotificationCompat.Builder notifyBuilder = new NotificationCompat
                 .Builder(this, getString(R.string.default_notification_channel_id))
                 .setContentTitle(title)
                 .setContentText(text)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.mipmap.chatman_launcher_round)
+                .setLargeIcon(bitmap)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setAutoCancel(true).setContentIntent(notificationPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
