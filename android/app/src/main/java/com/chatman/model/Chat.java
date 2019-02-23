@@ -4,12 +4,14 @@ import java.util.Date;
 
 public class Chat {
     private String idSender;
+    private String nameSender;
     private String idReceiver;
     private Date date;
     private String message;
 
-    public Chat(String idSender, String idReceiver, Date date, String message) {
+    public Chat(String idSender, String nameSender, String idReceiver, Date date, String message) {
         this.idSender = idSender;
+        this.nameSender = nameSender;
         this.idReceiver = idReceiver;
         this.date = date;
         this.message = message;
@@ -21,6 +23,14 @@ public class Chat {
 
     public void setIdSender(String idSender) {
         this.idSender = idSender;
+    }
+
+    public String getNameSender() {
+        return nameSender;
+    }
+
+    public void setNameSender(String nameSender) {
+        this.nameSender = nameSender;
     }
 
     public String getIdReceiver() {

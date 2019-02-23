@@ -6,7 +6,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class FirebaseHelper {
 
     private static final String DB_USER = "user";
-    private static final String DB_MESSAGE = "MESSAGE";
+    private static final String DB_MESSAGE = "message";
 
     public static String USER_KEY, USER_EMAIL, USER_NAMA, USER_PASSWORD;
     private static DatabaseReference reference = FirebaseDatabase.getInstance().getReference();

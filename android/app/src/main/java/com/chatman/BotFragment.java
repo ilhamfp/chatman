@@ -7,6 +7,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Toast;
+
+import com.chatman.helper.FirebaseHelper;
+import com.chatman.helper.PreferencesHelper;
+import com.chatman.model.Chat;
+import com.chatman.model.User;
+
+import java.util.Calendar;
 
 
 /**
@@ -20,6 +31,10 @@ import android.view.ViewGroup;
 public class BotFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
+    private ImageButton sentButton;
+    private EditText message;
+    private Context context;
+    private static final String BOT_KEY = "BOT_KEY";
 
     public BotFragment() {
         // Required empty public constructor
@@ -34,15 +49,35 @@ public class BotFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = getContext();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        View view = inflater.inflate(R.layout.fragment_bot, container, false);
+
+        sentButton = view.findViewById(R.id.chat_bot_room_send);
+        message = view.findViewById(R.id.chat_bot_room_et);
+
+        sentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!message.getText().toString().equals("")){
+                    Toast.makeText(context, "Send: "+message.getText().toString(), Toast.LENGTH_SHORT).show();
+                    Chat sendMessage = new Chat(PreferencesHelper.getUserFirebaseKey(context), PreferencesHelper.getUserName(context), BOT_KEY, Calendar.getInstance().getTime(), message.getText().toString());
+                    String key = FirebaseHelper.dbMessage.push().getKey();
+                    FirebaseHelper.dbMessage.child(key).setValue(sendMessage);
+                }
+            }
+        });
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_bot, container, false);
+        return view;
     }
+
+
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -81,5 +116,7 @@ public class BotFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
 
 }
