@@ -81,9 +81,6 @@ public class MainActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
         context = this;
 
-        FirebaseHelper.dbUser.child(PreferencesHelper.getUserFirebaseKey(this)).child("key").setValue(PreferencesHelper.getToken(this));
-
-
         // Bottom Navigation Bar
         bottomNavbar = findViewById(R.id.navigation);
         bottomNavbar.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
