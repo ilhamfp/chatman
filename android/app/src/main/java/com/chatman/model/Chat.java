@@ -9,6 +9,9 @@ public class Chat {
     private Date date;
     private String message;
 
+    public Chat() {
+    }
+
     public Chat(String idSender, String nameSender, String idReceiver, Date date, String message) {
         this.idSender = idSender;
         this.nameSender = nameSender;

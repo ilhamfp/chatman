@@ -6,6 +6,8 @@ public class ChatList {
     private String lastMessage;
     // Todo : tambahin atribut KEY atau apalah supaya ntar waktu ditekan, ke fragmentnya bisa dipass KEY itu terus data di dalam fragmentnya diambil berdasarkan KEY tersebut
 
+    public ChatList() {
+    }
 
     public ChatList(int avatarResource, String name, String lastMessage) {
         this.avatarResource = avatarResource;

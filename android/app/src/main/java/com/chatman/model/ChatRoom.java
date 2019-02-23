@@ -6,6 +6,9 @@ public class ChatRoom {
     private String idSender;
     private List<Chat> messages;
 
+    public ChatRoom() {
+    }
+
     public ChatRoom(String idSender, List<Chat> messages) {
         this.idSender = idSender;
         this.messages = messages;
