@@ -24,6 +24,38 @@ let message = {
   token: registrationToken
 }
 
+const db = admin.database();
+let message_db = db.ref('message');
+let chatrooms_db = db.ref('chatroom');
+
+chatrooms_db.on('child_added', chatroom => {
+  console.log('chatroom added');
+  chatroom.ref.child('messages').on('child_added', chat => {
+  let chatref = message_db.child(chat.val());
+  console.log(chat.val());
+  chatref.on('value', chatSnap => {
+    console.log(chatSnap.val());
+    if (chatSnap.val()) {
+      let message = {
+        notification: {
+          title: chatSnap.child('nameSender').val(),
+          body: chatSnap.child('message').val()
+        },
+        token: chatSnap.child('receiver').val()
+      }
+      admin.messaging().send(message)
+        .then(response => {
+          console.log('Success : ' + response)
+        })
+        .catch(err => {
+          console.log('Error : ' + err)
+        });
+    }
+  });
+  console.log('chat added');
+  });
+});
+
 
 
 app.get('/send', function(req, res) {
