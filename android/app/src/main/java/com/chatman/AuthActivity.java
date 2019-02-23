@@ -106,7 +106,7 @@ public class AuthActivity extends AppCompatActivity {
             User user = ds.getValue(User.class);
             if (user.getEmail().equals(email) && user.getPassword().equals(md5(password))) {
                 PreferencesHelper.setUserFirebaseId(AuthActivity.this, user.getId());
-                PreferencesHelper.setTokenKey(AuthActivity.this, user.getKey());
+                FirebaseHelper.dbUser.child(PreferencesHelper.getUserFirebaseKey(this)).child("key").setValue(PreferencesHelper.getToken(this));
                 PreferencesHelper.setUserName(this, user.getName());
                 PreferencesHelper.setHasLogin(this, true);
                 finish();
