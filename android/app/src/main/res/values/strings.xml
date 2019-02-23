@@ -25,5 +25,7 @@
     <string name="navigation_profile">Profile</string>
     <string name="navigation_home">Home</string>
     <string name="navigation_bot">Bot</string>
+    <string name="send_message_button">Send message button</string>
+    <string name="message">Message</string>
 </resources>
 
