@@ -1,17 +1,24 @@
 package com.chatman;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -25,8 +32,14 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.chatman.adapter.ChatListAdapter;
+import com.chatman.helper.FirebaseHelper;
 import com.chatman.helper.PreferencesHelper;
 import com.chatman.model.ChatList;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements
                 case R.id.navigation_bot:
                     loadFragment(new BotFragment()); break;
             }
-
             return true;
         }
     };
@@ -68,6 +80,9 @@ public class MainActivity extends AppCompatActivity implements
         Glide.with(this).load(getImage("logo")).fitCenter().into(toolbarImage);
         setSupportActionBar(toolbar);
         context = this;
+
+        FirebaseHelper.dbUser.child(PreferencesHelper.getUserFirebaseKey(this)).child("key").setValue(PreferencesHelper.getToken(this));
+
 
         // Bottom Navigation Bar
         bottomNavbar = findViewById(R.id.navigation);

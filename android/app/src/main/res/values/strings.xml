@@ -25,5 +25,21 @@
     <string name="navigation_profile">Profile</string>
     <string name="navigation_home">Home</string>
     <string name="navigation_bot">Bot</string>
+
+    <!-- Notification ID -->
+    <string name="default_notification_channel_id">NOTIF_MANTAP_CHATMAN</string>
+    <string name="default_notification_channel_name" translatable="true">Message</string>
+    <string name="notification_channel_description">Notifikasi dari chat</string>
+
+
+    <string name="notification_title">You\'ve been notified!</string>
+    <string name="notification_text">This is your notification text.</string>
+    <string name="update">Update Notification</string>
+    <string name="notify_me">Notify Me!</string>
+    <string name="update_me">Update Me!</string>
+    <string name="cancel_me">Cancel Me!</string>
+    <string name="notification_updated">Notification Updated!</string>
+    <string name="notification_channel_name">Mascot Notification</string>
+
 </resources>
 

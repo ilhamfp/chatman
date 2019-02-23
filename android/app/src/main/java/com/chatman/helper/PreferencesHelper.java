@@ -9,6 +9,7 @@ public class PreferencesHelper {
     public static final String USER_FIREBASE_KEY = "user_firebase_key";
     public static final String USER_NAME = "user_name";
     public static final String HAS_LOGIN = "has_login";
+    public static final String TOKEN= "token";
 
     private static void setBooleanPreferences(Context context, String key, boolean value) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -69,6 +70,14 @@ public class PreferencesHelper {
 
     public static boolean getHasLogin(Context context) {
         return getBooleanPreferences(context, HAS_LOGIN);
+    }
+
+    public static void setToken(Context context, String string) {
+        setStringPreferences(context, TOKEN, string);
+    }
+
+    public static String getToken(Context context) {
+        return getStringPreferences(context, TOKEN);
     }
 
 }
