@@ -106,51 +106,6 @@ public class HomeFragment extends Fragment {
     private List<ChatList> getChatLists() {
         chatLists = new ArrayList<>();
         chatLists.add(new ChatList(
-                R.drawable.priagung,
-                "Priagung Satyagama",
-                "Woi sini ke sekre 2 temani diriku yang kesepian"
-        ));
-        chatLists.add(new ChatList(
-                R.drawable.rama,
-                "Yusuf Rahmat Pratama",
-                "Eh, gmn gmn?"
-        ));
-        chatLists.add(new ChatList(
-                R.drawable.priagung,
-                "Priagung Satyagama2",
-                "Woi sini ke sekre 2 temani diriku yang kesepian"
-        ));
-        chatLists.add(new ChatList(
-                R.drawable.rama,
-                "Yusuf Rahmat Pratama2",
-                "Eh, gmn gmn?"
-        ));
-        chatLists.add(new ChatList(
-                R.drawable.priagung,
-                "Priagung Satyagama3",
-                "Woi sini ke sekre 2 temani diriku yang kesepian"
-        ));
-        chatLists.add(new ChatList(
-                R.drawable.rama,
-                "Yusuf Rahmat Pratama3",
-                "Eh, gmn gmn?"
-        ));
-        chatLists.add(new ChatList(
-                R.drawable.priagung,
-                "Priagung Satyagama4",
-                "Woi sini ke sekre 2 temani diriku yang kesepian"
-        ));
-        chatLists.add(new ChatList(
-                R.drawable.rama,
-                "Yusuf Rahmat Pratama4",
-                "Eh, gmn gmn?"
-        ));
-        chatLists.add(new ChatList(
-                R.drawable.priagung,
-                "Priagung Satyagama5",
-                "Woi sini ke sekre 2 temani diriku yang kesepian"
-        ));
-        chatLists.add(new ChatList(
                 R.drawable.rama,
                 "Yusuf Rahmat Pratama5",
                 "Eh, gmn gmn?"
@@ -161,9 +116,9 @@ public class HomeFragment extends Fragment {
                 "Woi sini ke sekre 2 temani diriku yang kesepian"
         ));
         chatLists.add(new ChatList(
-                R.drawable.rama,
-                "Yusuf Rahmat Pratama6",
-                "Eh, gmn gmn?"
+                R.drawable.ilham,
+                "Ilham Firdausi Putra",
+                "Mantap betul"
         ));
         return chatLists;
     }

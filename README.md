@@ -2,9 +2,9 @@
 
 ## About ChatMan
 
-ChatMan is a multi purpose chatbot.
+ChatMan is a multi purpose chatbot.  
 
 ## Display
-![login](photoshop_assets/login_page.png?raw=true "login")  
-![bot_chatroom](photoshop_assets/bot_chatroom.png?raw=true "bot_chatroom")  
+![login](photoshop_assets/login_page.jpg?raw=true "login")    
+![bot_chatroom](photoshop_assets/bot_chatroom.jpg?raw=true "bot_chatroom")    
 
