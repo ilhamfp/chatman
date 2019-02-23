@@ -47,7 +47,7 @@ public class PreferencesHelper {
         return preferences.getInt(key, 0);
     }
 
-    public static void setUserFirebaseKey(Context context, String value) {
+    public static void setUserFirebaseId(Context context, String value) {
         setStringPreferences(context, USER_FIREBASE_KEY, value);
     }
 
@@ -72,7 +72,7 @@ public class PreferencesHelper {
         return getBooleanPreferences(context, HAS_LOGIN);
     }
 
-    public static void setToken(Context context, String string) {
+    public static void setTokenKey(Context context, String string) {
         setStringPreferences(context, TOKEN, string);
     }
 
