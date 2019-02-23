@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -19,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.chatman.adapter.ChatListAdapter;
+import com.chatman.adapter.MainViewPagerAdapter;
 import com.chatman.helper.PreferencesHelper;
 import com.chatman.model.ChatList;
 
@@ -31,7 +34,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private RecyclerView recycler;
     private ChatListAdapter adapter;
     private List<ChatList> chatLists;
+
     private Context context;
+    private MainViewPagerAdapter pagerAdapter;
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,16 +48,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
         context = this;
 
-        // Recycler View
-        recycler = findViewById(R.id.chat_list_rv);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-        linearLayoutManager.setReverseLayout(true);
-        linearLayoutManager.setStackFromEnd(true);
-        recycler.setLayoutManager(linearLayoutManager);
-        getChatLists();
-        adapter = new ChatListAdapter(chatLists);
-        recycler.setAdapter(adapter);
-
+        viewPager = findViewById(R.id.view_pager);
+        tabLayout =findViewById(R.id.tab_layout);
+        pagerAdapter = new MainViewPagerAdapter(getSupportFragmentManager(), this);
+        viewPager.setAdapter(pagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -117,68 +119,4 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     // Todo: Ganti data dummmy jadi data asli ngambil dari database
-    private List<ChatList> getChatLists() {
-        chatLists = new ArrayList<>();
-        chatLists.add(new ChatList(
-                R.drawable.priagung,
-                "Priagung Satyagama",
-                "Woi sini ke sekre 2 temani diriku yang kesepian"
-        ));
-        chatLists.add(new ChatList(
-                R.drawable.rama,
-                "Yusuf Rahmat Pratama",
-                "Eh, gmn gmn?"
-        ));
-        chatLists.add(new ChatList(
-                R.drawable.priagung,
-                "Priagung Satyagama",
-                "Woi sini ke sekre 2 temani diriku yang kesepian"
-        ));
-        chatLists.add(new ChatList(
-                R.drawable.rama,
-                "Yusuf Rahmat Pratama",
-                "Eh, gmn gmn?"
-        ));
-        chatLists.add(new ChatList(
-                R.drawable.priagung,
-                "Priagung Satyagama",
-                "Woi sini ke sekre 2 temani diriku yang kesepian"
-        ));
-        chatLists.add(new ChatList(
-                R.drawable.rama,
-                "Yusuf Rahmat Pratama",
-                "Eh, gmn gmn?"
-        ));
-        chatLists.add(new ChatList(
-                R.drawable.priagung,
-                "Priagung Satyagama",
-                "Woi sini ke sekre 2 temani diriku yang kesepian"
-        ));
-        chatLists.add(new ChatList(
-                R.drawable.rama,
-                "Yusuf Rahmat Pratama",
-                "Eh, gmn gmn?"
-        ));
-        chatLists.add(new ChatList(
-                R.drawable.priagung,
-                "Priagung Satyagama",
-                "Woi sini ke sekre 2 temani diriku yang kesepian"
-        ));
-        chatLists.add(new ChatList(
-                R.drawable.rama,
-                "Yusuf Rahmat Pratama",
-                "Eh, gmn gmn?"
-        ));
-        chatLists.add(new ChatList(
-                R.drawable.priagung,
-                "Priagung Satyagama",
-                "Woi sini ke sekre 2 temani diriku yang kesepian"
-        ));
-        chatLists.add(new ChatList(
-                R.drawable.rama,
-                "Yusuf Rahmat Pratama",
-                "Eh, gmn gmn?"
-        ));
-        return chatLists;
-    }
 }
