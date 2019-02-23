@@ -1,21 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".BotFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/tv_hello"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/chat_bot_room_rv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Bot fragment" />
-
-    <Button
-        android:id="@+id/btn"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="tombol"/>
+        android:layout_marginBottom="56dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
 
-</FrameLayout>
+    </android.support.v7.widget.RecyclerView>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="56dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="horizontal">
+
+        <EditText
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/chat_bot_room_send"
+            android:id="@+id/chat_bot_room_et"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:minHeight="56dp"
+
+            android:layout_weight="9"
+            android:hint="@string/message"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLines ="4"
+            android:maxLength ="2000"
+            android:scrollHorizontally="false"/>
+
+
+        <ImageButton
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:id="@+id/chat_bot_room_send"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:scaleType="fitCenter"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/my_custom_selector"
+            android:contentDescription="@string/send_message_button"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp" />
+
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>

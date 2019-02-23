@@ -41,5 +41,8 @@
     <string name="notification_updated">Notification Updated!</string>
     <string name="notification_channel_name">Mascot Notification</string>
 
+
+    <string name="send_message_button">Send message button</string>
+    <string name="message">Message</string>
 </resources>
 
