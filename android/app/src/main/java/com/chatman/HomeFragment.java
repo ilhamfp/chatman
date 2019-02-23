@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import com.chatman.adapter.ChatListAdapter;
 import com.chatman.model.ChatList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -49,7 +51,17 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        // Recycler View
+        recycler = view.findViewById(R.id.chat_list_rv);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        recycler.setLayoutManager(linearLayoutManager);
+        getChatLists();
+        adapter = new ChatListAdapter(chatLists);
+        recycler.setAdapter(adapter);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -91,69 +103,69 @@ public class HomeFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    //    // Todo: Ganti data dummmy jadi data asli ngambil dari database
-//    private List<ChatList> getChatLists() {
-//        chatLists = new ArrayList<>();
-//        chatLists.add(new ChatList(
-//                R.drawable.priagung,
-//                "Priagung Satyagama",
-//                "Woi sini ke sekre 2 temani diriku yang kesepian"
-//        ));
-//        chatLists.add(new ChatList(
-//                R.drawable.rama,
-//                "Yusuf Rahmat Pratama",
-//                "Eh, gmn gmn?"
-//        ));
-//        chatLists.add(new ChatList(
-//                R.drawable.priagung,
-//                "Priagung Satyagama",
-//                "Woi sini ke sekre 2 temani diriku yang kesepian"
-//        ));
-//        chatLists.add(new ChatList(
-//                R.drawable.rama,
-//                "Yusuf Rahmat Pratama",
-//                "Eh, gmn gmn?"
-//        ));
-//        chatLists.add(new ChatList(
-//                R.drawable.priagung,
-//                "Priagung Satyagama",
-//                "Woi sini ke sekre 2 temani diriku yang kesepian"
-//        ));
-//        chatLists.add(new ChatList(
-//                R.drawable.rama,
-//                "Yusuf Rahmat Pratama",
-//                "Eh, gmn gmn?"
-//        ));
-//        chatLists.add(new ChatList(
-//                R.drawable.priagung,
-//                "Priagung Satyagama",
-//                "Woi sini ke sekre 2 temani diriku yang kesepian"
-//        ));
-//        chatLists.add(new ChatList(
-//                R.drawable.rama,
-//                "Yusuf Rahmat Pratama",
-//                "Eh, gmn gmn?"
-//        ));
-//        chatLists.add(new ChatList(
-//                R.drawable.priagung,
-//                "Priagung Satyagama",
-//                "Woi sini ke sekre 2 temani diriku yang kesepian"
-//        ));
-//        chatLists.add(new ChatList(
-//                R.drawable.rama,
-//                "Yusuf Rahmat Pratama",
-//                "Eh, gmn gmn?"
-//        ));
-//        chatLists.add(new ChatList(
-//                R.drawable.priagung,
-//                "Priagung Satyagama",
-//                "Woi sini ke sekre 2 temani diriku yang kesepian"
-//        ));
-//        chatLists.add(new ChatList(
-//                R.drawable.rama,
-//                "Yusuf Rahmat Pratama",
-//                "Eh, gmn gmn?"
-//        ));
-//        return chatLists;
-//    }
+    // Todo: Ganti data dummmy jadi data asli ngambil dari database
+    private List<ChatList> getChatLists() {
+        chatLists = new ArrayList<>();
+        chatLists.add(new ChatList(
+                R.drawable.priagung,
+                "Priagung Satyagama",
+                "Woi sini ke sekre 2 temani diriku yang kesepian"
+        ));
+        chatLists.add(new ChatList(
+                R.drawable.rama,
+                "Yusuf Rahmat Pratama",
+                "Eh, gmn gmn?"
+        ));
+        chatLists.add(new ChatList(
+                R.drawable.priagung,
+                "Priagung Satyagama",
+                "Woi sini ke sekre 2 temani diriku yang kesepian"
+        ));
+        chatLists.add(new ChatList(
+                R.drawable.rama,
+                "Yusuf Rahmat Pratama",
+                "Eh, gmn gmn?"
+        ));
+        chatLists.add(new ChatList(
+                R.drawable.priagung,
+                "Priagung Satyagama",
+                "Woi sini ke sekre 2 temani diriku yang kesepian"
+        ));
+        chatLists.add(new ChatList(
+                R.drawable.rama,
+                "Yusuf Rahmat Pratama",
+                "Eh, gmn gmn?"
+        ));
+        chatLists.add(new ChatList(
+                R.drawable.priagung,
+                "Priagung Satyagama",
+                "Woi sini ke sekre 2 temani diriku yang kesepian"
+        ));
+        chatLists.add(new ChatList(
+                R.drawable.rama,
+                "Yusuf Rahmat Pratama",
+                "Eh, gmn gmn?"
+        ));
+        chatLists.add(new ChatList(
+                R.drawable.priagung,
+                "Priagung Satyagama",
+                "Woi sini ke sekre 2 temani diriku yang kesepian"
+        ));
+        chatLists.add(new ChatList(
+                R.drawable.rama,
+                "Yusuf Rahmat Pratama",
+                "Eh, gmn gmn?"
+        ));
+        chatLists.add(new ChatList(
+                R.drawable.priagung,
+                "Priagung Satyagama",
+                "Woi sini ke sekre 2 temani diriku yang kesepian"
+        ));
+        chatLists.add(new ChatList(
+                R.drawable.rama,
+                "Yusuf Rahmat Pratama",
+                "Eh, gmn gmn?"
+        ));
+        return chatLists;
+    }
 }

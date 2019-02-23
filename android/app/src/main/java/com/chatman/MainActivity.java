@@ -71,17 +71,6 @@ public class MainActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
         context = this;
 
-        // Recycler View
-//        recycler = findViewById(R.id.chat_list_rv);
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-//        linearLayoutManager.setReverseLayout(true);
-//        linearLayoutManager.setStackFromEnd(true);
-//        recycler.setLayoutManager(linearLayoutManager);
-//        getChatLists();
-//        adapter = new ChatListAdapter(chatLists);
-//        recycler.setAdapter(adapter);
-
-
         // Bottom Navigation Bar
         bottomNavbar = findViewById(R.id.navigation);
         bottomNavbar.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
