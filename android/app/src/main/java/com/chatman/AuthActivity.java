@@ -172,7 +172,7 @@ public class AuthActivity extends AppCompatActivity {
                         User user;
                         user = new User(instanceId, name, email, md5(password));
                         user.setKey(instanceId);
-                        PreferencesHelper.setUserFirebaseKey(AuthActivity.this, key);
+                        PreferencesHelper.setUserFirebaseKey(AuthActivity.this, user.getKey());
                         PreferencesHelper.setUserName(AuthActivity.this, user.getName());
                         PreferencesHelper.setHasLogin(AuthActivity.this, true);
 
