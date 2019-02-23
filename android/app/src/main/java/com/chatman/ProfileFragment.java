@@ -72,7 +72,7 @@ public class ProfileFragment extends Fragment {
             {
                 Intent intent;
                 intent = new Intent(getContext(), AuthActivity.class);
-                PreferencesHelper.setUserFirebaseKey(getContext(), "");
+                PreferencesHelper.setUserFirebaseId(getContext(), "");
                 PreferencesHelper.setUserName(getContext(),"");
                 PreferencesHelper.setHasLogin(getContext(), false);
                 getActivity().finish();

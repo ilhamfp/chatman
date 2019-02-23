@@ -105,7 +105,8 @@ public class AuthActivity extends AppCompatActivity {
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
             User user = ds.getValue(User.class);
             if (user.getEmail().equals(email) && user.getPassword().equals(md5(password))) {
-                PreferencesHelper.setUserFirebaseKey(this, ds.getKey());
+                PreferencesHelper.setUserFirebaseId(AuthActivity.this, user.getId());
+                PreferencesHelper.setTokenKey(AuthActivity.this, user.getKey());
                 PreferencesHelper.setUserName(this, user.getName());
                 PreferencesHelper.setHasLogin(this, true);
                 finish();
@@ -167,16 +168,16 @@ public class AuthActivity extends AppCompatActivity {
                 FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                     @Override
                     public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        String key = FirebaseHelper.dbUser.push().getKey();
+                        String idFirebase = FirebaseHelper.dbUser.push().getKey();
                         String instanceId = task.getResult().getToken();
                         User user;
-                        user = new User(instanceId, name, email, md5(password));
-                        user.setKey(instanceId);
-                        PreferencesHelper.setUserFirebaseKey(AuthActivity.this, user.getKey());
+                        user = new User(instanceId, name, email, md5(password), idFirebase);
+                        PreferencesHelper.setUserFirebaseId(AuthActivity.this, user.getId());
+                        PreferencesHelper.setTokenKey(AuthActivity.this, user.getKey());
                         PreferencesHelper.setUserName(AuthActivity.this, user.getName());
                         PreferencesHelper.setHasLogin(AuthActivity.this, true);
 
-                        FirebaseHelper.dbUser.child(key).setValue(user);
+                        FirebaseHelper.dbUser.child(idFirebase).setValue(user);
                         finish();
                         startActivity(new Intent(AuthActivity.this, MainActivity.class));
                     }

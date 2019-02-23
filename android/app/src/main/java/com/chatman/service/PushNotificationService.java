@@ -43,7 +43,7 @@ public class PushNotificationService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String s) {
         super.onNewToken(s);
-        PreferencesHelper.setToken(this, s);
+        PreferencesHelper.setTokenKey(this, s);
         Log.d(TAG, "onNewToken: " + s);
         Log.d(TAG, "onNewToken: " + PreferencesHelper.getUserFirebaseKey(this));
     }
