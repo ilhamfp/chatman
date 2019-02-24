@@ -2,15 +2,18 @@ package com.chatman.activity;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -53,6 +56,18 @@ public class MainActivity extends AppCompatActivity implements
         ImageView toolbarImage = findViewById(R.id.toolbar_image);
         Glide.with(this).load(getImage("logo")).fitCenter().into(toolbarImage);
         setSupportActionBar(toolbar);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                getWindow().setStatusBarColor(ContextCompat
+                        .getColor(this, android.R.color.black));
+            }
+            else {
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                getWindow().setStatusBarColor(ContextCompat
+                        .getColor(this, R.color.white));
+            }
+
+        }
         context = this;
 
         // Bottom Navigation Bar

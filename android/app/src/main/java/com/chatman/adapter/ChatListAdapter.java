@@ -2,6 +2,7 @@ package com.chatman.adapter;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.chatman.R;
+import com.chatman.activity.ChatRoomActivity;
 import com.chatman.model.ChatList;
 
 import java.util.ArrayList;
@@ -44,6 +46,11 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
             @Override
             public void onClick(View view) {
                 String chatRoomId = items.get(position).getIdChatRoom();
+                String name = items.get(position).getName();
+                Intent intent = new Intent(context, ChatRoomActivity.class);
+                intent.putExtra("name", name);
+                intent.putExtra("chatRoomId", chatRoomId);
+                context.startActivity(intent);
                 Toast.makeText(context, "Show "+nama+" chat room", Toast.LENGTH_SHORT).show();
         }
         });
