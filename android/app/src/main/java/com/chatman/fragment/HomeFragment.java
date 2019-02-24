@@ -199,7 +199,7 @@ public class HomeFragment extends Fragment {
                 chatRoomSnapshot.getRef().child("messages").addChildEventListener(new MessageChildListener(sender, idChatRoom));
             }
             else {
-                for (ChatList chatList : chatLists) {
+                for (ChatList chatList : new ArrayList<>(chatLists)) {
                     if (chatList.getIdChatRoom().equals(idChatRoom)) {
                         chatLists.remove(chatList);
                     }

@@ -140,8 +140,8 @@ public class ChatRoomActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 FirebaseHelper.dbMessage.child((String) dataSnapshot.getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        chatList.add(dataSnapshot.getValue(Chat.class));
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        chatList.add(snapshot.getValue(Chat.class));
                         adapter.notifyDataSetChanged();
                         chatRv.scrollToPosition(chatList.size() - 1);
                     }
