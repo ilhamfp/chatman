@@ -3,15 +3,24 @@ package com.chatman;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.chatman.adapter.ChatListAdapter;
+import com.chatman.helper.PreferencesHelper;
 import com.chatman.model.ChatList;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +35,8 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
+
+    private static String TAG = HomeFragment.class.getSimpleName();
 
     private RecyclerView recycler;
     private ChatListAdapter adapter;
@@ -58,6 +69,7 @@ public class HomeFragment extends Fragment {
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
         recycler.setLayoutManager(linearLayoutManager);
+        chatLists = new ArrayList<>();
         getChatLists();
         adapter = new ChatListAdapter(chatLists);
         recycler.setAdapter(adapter);
@@ -102,24 +114,156 @@ public class HomeFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    private class MessageChildListener implements ChildEventListener {
+
+        private String sender;
+        private String idChatRoom;
+        public MessageChildListener(String sender, String idChatRoom) {
+            this.sender = sender;
+            this.idChatRoom = idChatRoom;
+        }
+
+        @Override
+        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            String messageId = (String) dataSnapshot.getValue();
+            Log.d(TAG, "onDataChange: messageId " + messageId);
+            FirebaseDatabase.getInstance().getReference().child("message")
+                    .child(messageId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    String message = (String) dataSnapshot.child("message").getValue();
+                    Log.d(TAG, "onDataChange: message " + message);
+                    chatLists.add(new ChatList(R.mipmap.chatman_launcher_round, sender, message, idChatRoom));
+                    adapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+        @Override
+        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+
+        @Override
+        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+
+        @Override
+        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {}
+    }
+
+    private class UserChildListener implements ChildEventListener {
+
+        private DataSnapshot chatRoomSnapshot;
+
+        public UserChildListener(DataSnapshot chatRoomSnapshot) {
+            this.chatRoomSnapshot = chatRoomSnapshot;
+        }
+
+        @Override
+        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            Log.d(TAG, "onDataChange: user found 2");
+            final String sender = (String) dataSnapshot.child("name").getValue();
+            String idChatRoom = chatRoomSnapshot.getKey();
+            Log.d(TAG, "onChildAdded: idChatRoom " + idChatRoom);
+            Log.d(TAG, "onDataChange: sender " + sender);
+            if (chatRoomSnapshot.hasChild("messages")) {
+                Log.d(TAG, "onDataChange: chatroom is occupied with messages");
+                chatRoomSnapshot.getRef().child("messages").addChildEventListener(new MessageChildListener(sender, idChatRoom));
+            }
+            else {
+                chatLists.add(new ChatList(R.mipmap.chatman_launcher_round, sender, "", idChatRoom));
+                adapter.notifyDataSetChanged();
+            }
+        }
+
+        @Override
+        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+
+        @Override
+        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+
+        @Override
+        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {}
+    }
+
     // Todo: Ganti data dummmy jadi data asli ngambil dari database
+    // sorry for bad code :(
     private List<ChatList> getChatLists() {
-        chatLists = new ArrayList<>();
-        chatLists.add(new ChatList(
-                R.drawable.rama,
-                "Yusuf Rahmat Pratama5",
-                "Eh, gmn gmn?"
-        ));
-        chatLists.add(new ChatList(
-                R.drawable.priagung,
-                "Priagung Satyagama6",
-                "Woi sini ke sekre 2 temani diriku yang kesepian"
-        ));
-        chatLists.add(new ChatList(
-                R.drawable.ilham,
-                "Ilham Firdausi Putra",
-                "Mantap betul"
-        ));
+
+        FirebaseDatabase.getInstance().getReference().child("chatroom").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull final DataSnapshot chatRoomSnapshot, @Nullable String s) {
+                Log.d(TAG, "onDataChange: chatroom changed");
+                Log.d(TAG, "onDataChange: chatroom key " + chatRoomSnapshot.getKey());
+                chatRoomSnapshot.getRef().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                        Log.d(TAG, "onDataChange: users changed");
+                        Log.d(TAG, "onDataChange: userSnapshot count " + userSnapshot.getChildrenCount());
+                        for (DataSnapshot ds : userSnapshot.getChildren()) {
+                            String instanceId = (String) ds.getValue();
+                            Log.d(TAG, "onDataChange: instance id " + instanceId);
+                            if (!instanceId.equals(PreferencesHelper.getToken(getContext()))) {
+                                Log.d(TAG, "onDataChange: user found");
+                                Log.d(TAG, "onDataChange: instance id 2 " + instanceId);
+                                FirebaseDatabase.getInstance().getReference().child("user").orderByChild("key").limitToFirst(1)
+                                        .equalTo(instanceId).addChildEventListener(new UserChildListener(chatRoomSnapshot));
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+//        chatLists = new ArrayList<>();
+//        chatLists.add(new ChatList(
+//                R.drawable.rama,
+//                "Yusuf Rahmat Pratama5",
+//                "Eh, gmn gmn?"
+//        ));
+//        chatLists.add(new ChatList(
+//                R.drawable.priagung,
+//                "Priagung Satyagama6",
+//                "Woi sini ke sekre 2 temani diriku yang kesepian"
+//        ));
+//        chatLists.add(new ChatList(
+//                R.drawable.ilham,
+//                "Ilham Firdausi Putra",
+//                "Mantap betul"
+//        ));
         return chatLists;
     }
 }

@@ -54,66 +54,66 @@ public class ChatList extends Fragment {
 
     private List<com.chatman.model.ChatList> getChatLists() {
         chatLists = new ArrayList<>();
-        chatLists.add(new com.chatman.model.ChatList(
-                R.drawable.priagung,
-                "Priagung Satyagama",
-                "Woi sini ke sekre 2 temani diriku yang kesepian"
-        ));
-        chatLists.add(new com.chatman.model.ChatList(
-                R.drawable.rama,
-                "Yusuf Rahmat Pratama",
-                "Eh, gmn gmn?"
-        ));
-        chatLists.add(new com.chatman.model.ChatList(
-                R.drawable.priagung,
-                "Priagung Satyagama",
-                "Woi sini ke sekre 2 temani diriku yang kesepian"
-        ));
-        chatLists.add(new com.chatman.model.ChatList(
-                R.drawable.rama,
-                "Yusuf Rahmat Pratama",
-                "Eh, gmn gmn?"
-        ));
-        chatLists.add(new com.chatman.model.ChatList(
-                R.drawable.priagung,
-                "Priagung Satyagama",
-                "Woi sini ke sekre 2 temani diriku yang kesepian"
-        ));
-        chatLists.add(new com.chatman.model.ChatList(
-                R.drawable.rama,
-                "Yusuf Rahmat Pratama",
-                "Eh, gmn gmn?"
-        ));
-        chatLists.add(new com.chatman.model.ChatList(
-                R.drawable.priagung,
-                "Priagung Satyagama",
-                "Woi sini ke sekre 2 temani diriku yang kesepian"
-        ));
-        chatLists.add(new com.chatman.model.ChatList(
-                R.drawable.rama,
-                "Yusuf Rahmat Pratama",
-                "Eh, gmn gmn?"
-        ));
-        chatLists.add(new com.chatman.model.ChatList(
-                R.drawable.priagung,
-                "Priagung Satyagama",
-                "Woi sini ke sekre 2 temani diriku yang kesepian"
-        ));
-        chatLists.add(new com.chatman.model.ChatList(
-                R.drawable.rama,
-                "Yusuf Rahmat Pratama",
-                "Eh, gmn gmn?"
-        ));
-        chatLists.add(new com.chatman.model.ChatList(
-                R.drawable.priagung,
-                "Priagung Satyagama",
-                "Woi sini ke sekre 2 temani diriku yang kesepian"
-        ));
-        chatLists.add(new com.chatman.model.ChatList(
-                R.drawable.rama,
-                "Yusuf Rahmat Pratama",
-                "Eh, gmn gmn?"
-        ));
+//        chatLists.add(new com.chatman.model.ChatList(
+//                R.drawable.priagung,
+//                "Priagung Satyagama",
+//                "Woi sini ke sekre 2 temani diriku yang kesepian"
+//        ));
+//        chatLists.add(new com.chatman.model.ChatList(
+//                R.drawable.rama,
+//                "Yusuf Rahmat Pratama",
+//                "Eh, gmn gmn?"
+//        ));
+//        chatLists.add(new com.chatman.model.ChatList(
+//                R.drawable.priagung,
+//                "Priagung Satyagama",
+//                "Woi sini ke sekre 2 temani diriku yang kesepian"
+//        ));
+//        chatLists.add(new com.chatman.model.ChatList(
+//                R.drawable.rama,
+//                "Yusuf Rahmat Pratama",
+//                "Eh, gmn gmn?"
+//        ));
+//        chatLists.add(new com.chatman.model.ChatList(
+//                R.drawable.priagung,
+//                "Priagung Satyagama",
+//                "Woi sini ke sekre 2 temani diriku yang kesepian"
+//        ));
+//        chatLists.add(new com.chatman.model.ChatList(
+//                R.drawable.rama,
+//                "Yusuf Rahmat Pratama",
+//                "Eh, gmn gmn?"
+//        ));
+//        chatLists.add(new com.chatman.model.ChatList(
+//                R.drawable.priagung,
+//                "Priagung Satyagama",
+//                "Woi sini ke sekre 2 temani diriku yang kesepian"
+//        ));
+//        chatLists.add(new com.chatman.model.ChatList(
+//                R.drawable.rama,
+//                "Yusuf Rahmat Pratama",
+//                "Eh, gmn gmn?"
+//        ));
+//        chatLists.add(new com.chatman.model.ChatList(
+//                R.drawable.priagung,
+//                "Priagung Satyagama",
+//                "Woi sini ke sekre 2 temani diriku yang kesepian"
+//        ));
+//        chatLists.add(new com.chatman.model.ChatList(
+//                R.drawable.rama,
+//                "Yusuf Rahmat Pratama",
+//                "Eh, gmn gmn?"
+//        ));
+//        chatLists.add(new com.chatman.model.ChatList(
+//                R.drawable.priagung,
+//                "Priagung Satyagama",
+//                "Woi sini ke sekre 2 temani diriku yang kesepian"
+//        ));
+//        chatLists.add(new com.chatman.model.ChatList(
+//                R.drawable.rama,
+//                "Yusuf Rahmat Pratama",
+//                "Eh, gmn gmn?"
+//        ));
         return chatLists;
     }
 
