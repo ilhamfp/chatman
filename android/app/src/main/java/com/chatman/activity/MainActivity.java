@@ -1,6 +1,10 @@
 package com.chatman.activity;
 
 import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +25,7 @@ import com.chatman.R;
 import com.chatman.fragment.BotFragment;
 import com.chatman.fragment.HomeFragment;
 import com.chatman.fragment.ProfileFragment;
+import com.chatman.helper.SensorHelper;
 
 public class MainActivity extends AppCompatActivity implements
         ProfileFragment.OnFragmentInteractionListener,
@@ -29,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private Context context;
     private BottomNavigationView bottomNavbar;
+    private SensorHelper mSensorHelper;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -69,6 +75,9 @@ public class MainActivity extends AppCompatActivity implements
 
         }
         context = this;
+
+        //Set sensor
+        mSensorHelper = new SensorHelper(context);
 
         // Bottom Navigation Bar
         bottomNavbar = findViewById(R.id.navigation);
@@ -112,5 +121,18 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onFragmentInteraction(Uri uri){
         //you can leave it empty
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mSensorHelper.listenSensor(Sensor.TYPE_PROXIMITY);
+        mSensorHelper.listenSensor(Sensor.TYPE_GYROSCOPE);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mSensorHelper.unlistenSensor();
     }
 }

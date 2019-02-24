@@ -1,6 +1,7 @@
 package com.chatman.activity;
 
 import android.content.Intent;
+import android.hardware.Sensor;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import com.chatman.R;
 import com.chatman.adapter.ChatAdapter;
 import com.chatman.helper.FirebaseHelper;
 import com.chatman.helper.PreferencesHelper;
+import com.chatman.helper.SensorHelper;
 import com.chatman.model.Chat;
 import com.chatman.model.ChatRoom;
 import com.google.firebase.database.ChildEventListener;
@@ -45,6 +47,7 @@ public class ChatRoomActivity extends AppCompatActivity {
     private TextView toolbarName;
     private List<Chat> chatList;
     private String chatRoomId;
+    private SensorHelper mSensorHelper;
 
 
     @Override
@@ -89,6 +92,8 @@ public class ChatRoomActivity extends AppCompatActivity {
         chatRv.setAdapter(adapter);
         chatRv.scrollToPosition(chatList.size() - 1);
         initializeListener();
+
+        mSensorHelper = new SensorHelper(this);
     }
 
     private void initializeListener() {
@@ -178,5 +183,18 @@ public class ChatRoomActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mSensorHelper.listenSensor(Sensor.TYPE_PROXIMITY);
+        mSensorHelper.listenSensor(Sensor.TYPE_GYROSCOPE);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mSensorHelper.unlistenSensor();
     }
 }
