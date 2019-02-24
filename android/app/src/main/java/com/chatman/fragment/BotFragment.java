@@ -47,7 +47,7 @@ public class BotFragment extends Fragment {
     private RecyclerView recycler;
     private ChatAdapter adapter;
     private List<Chat> chatList;
-    private static final String BOT_KEY = "BOT_KEY";
+    private static final String BOT_TOKEN = "BOT_TOKEN";
 
     public BotFragment() {
         // Required empty public constructor
@@ -79,12 +79,12 @@ public class BotFragment extends Fragment {
             public void onClick(View view) {
                 if (!message.getText().toString().equals("")){
                     Toast.makeText(context, "Send: "+message.getText().toString(), Toast.LENGTH_SHORT).show();
-                    Chat sendMessage = new Chat(PreferencesHelper.getToken(context), PreferencesHelper.getUserName(context), BOT_KEY, Calendar.getInstance().getTime(), message.getText().toString());
+                    Chat sendMessage = new Chat(PreferencesHelper.getToken(context), PreferencesHelper.getUserName(context), BOT_TOKEN, Calendar.getInstance().getTime(), message.getText().toString());
                     String key = FirebaseHelper.dbMessage.push().getKey();
                     FirebaseHelper.dbMessage.child(key).setValue(sendMessage);
                     message.setText("");
                     // BALASAN DARI BOT
-                    Chat botMessage = new Chat(BOT_KEY, "ChatMan Bot", PreferencesHelper.getUserFirebaseKey(context), Calendar.getInstance().getTime(), "Halo! Selamat datang di ChatMan");
+                    Chat botMessage = new Chat(BOT_TOKEN, "ChatMan Bot", PreferencesHelper.getToken(context), Calendar.getInstance().getTime(), "Halo! Selamat datang di ChatMan");
                     String botKey = FirebaseHelper.dbMessage.push().getKey();
                     FirebaseHelper.dbMessage.child(botKey).setValue(botMessage);
 
@@ -113,6 +113,7 @@ public class BotFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 getAllChat(dataSnapshot);
                 adapter.notifyDataSetChanged();
+                recycler.scrollToPosition(chatList.size() - 1);
             }
 
             @Override
@@ -125,7 +126,7 @@ public class BotFragment extends Fragment {
     private void getAllChat(DataSnapshot dataSnapshot) {
         chatList = new ArrayList<>();
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
-            if (ds.getValue(Chat.class).getIdSender().equals(PreferencesHelper.getUserFirebaseKey(context)) || ds.getValue(Chat.class).getIdReceiver().equals(PreferencesHelper.getUserFirebaseKey(context))) {
+            if ( (ds.getValue(Chat.class).getIdSender().equals(PreferencesHelper.getToken(context)) && ds.getValue(Chat.class).getIdReceiver().equals(BOT_TOKEN)) || (ds.getValue(Chat.class).getIdReceiver().equals(PreferencesHelper.getToken(context)) && ds.getValue(Chat.class).getIdSender().equals(BOT_TOKEN))) {
                 chatList.add(ds.getValue(Chat.class));
             }
         }
