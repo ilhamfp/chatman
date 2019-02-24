@@ -151,7 +151,7 @@ public class HomeFragment extends Fragment {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     String message = (String) dataSnapshot.child("message").getValue();
                     Log.d(TAG, "onDataChange: message " + message);
-                    for (ChatList chatList : chatLists) {
+                    for (ChatList chatList : new ArrayList<>(chatLists)) {
                         if (chatList.getIdChatRoom().equals(idChatRoom)) {
                             chatLists.remove(chatList);
                         }

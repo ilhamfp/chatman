@@ -51,7 +51,6 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
                 intent.putExtra("name", name);
                 intent.putExtra("chatRoomId", chatRoomId);
                 context.startActivity(intent);
-                Toast.makeText(context, "Show "+nama+" chat room", Toast.LENGTH_SHORT).show();
         }
         });
     }
