@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.chatman.activity.CompassActivity;
 import com.chatman.model.Chat;
+import com.chatman.service.WeatherService;
 
 import java.util.Calendar;
 
@@ -15,6 +16,10 @@ public class BotMessageHelper {
         if (message.equals("compass")) {
             Intent intent = new Intent(context, CompassActivity.class);
             context.startActivity(intent);
+        }
+        else if (message.equals("weather today")) {
+            GpsHelper gps = new GpsHelper(context);
+            new WeatherService(context).execute(gps.getLocation());
         }
         else sendBotMessage(context, "Halo! Selamat datang di ChatMan");
     }
