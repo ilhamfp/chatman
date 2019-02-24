@@ -133,6 +133,11 @@ public class HomeFragment extends Fragment {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     String message = (String) dataSnapshot.child("message").getValue();
                     Log.d(TAG, "onDataChange: message " + message);
+                    for (ChatList chatList : chatLists) {
+                        if (chatList.getIdChatRoom().equals(idChatRoom)) {
+                            chatLists.remove(chatList);
+                        }
+                    }
                     chatLists.add(new ChatList(R.mipmap.chatman_launcher_round, sender, message, idChatRoom));
                     adapter.notifyDataSetChanged();
                 }
@@ -177,6 +182,11 @@ public class HomeFragment extends Fragment {
                 chatRoomSnapshot.getRef().child("messages").addChildEventListener(new MessageChildListener(sender, idChatRoom));
             }
             else {
+                for (ChatList chatList : chatLists) {
+                    if (chatList.getIdChatRoom().equals(idChatRoom)) {
+                        chatLists.remove(chatList);
+                    }
+                }
                 chatLists.add(new ChatList(R.mipmap.chatman_launcher_round, sender, "", idChatRoom));
                 adapter.notifyDataSetChanged();
             }
