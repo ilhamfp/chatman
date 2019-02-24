@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,6 +43,10 @@ public class HomeFragment extends Fragment {
     private RecyclerView recycler;
     private ChatListAdapter adapter;
     private List<ChatList> chatLists;
+    private FloatingActionButton fab;
+    private StartChatDialogFragment dialog;
+
+    private Context mContext;
 
     private OnFragmentInteractionListener mListener;
 
@@ -64,6 +69,17 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        fab = view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog = new StartChatDialogFragment();
+                dialog.setContext(getActivity());
+                dialog.show(getFragmentManager(), "ADD_ROOM");
+            }
+        });
+
         // Recycler View
         recycler = view.findViewById(R.id.chat_list_rv);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -92,6 +108,7 @@ public class HomeFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+        mContext = context;
     }
 
     @Override
@@ -173,7 +190,6 @@ public class HomeFragment extends Fragment {
 
         @Override
         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-            Log.d(TAG, "onDataChange: user found 2");
             final String sender = (String) dataSnapshot.child("name").getValue();
             String idChatRoom = chatRoomSnapshot.getKey();
             Log.d(TAG, "onChildAdded: idChatRoom " + idChatRoom);
@@ -220,15 +236,20 @@ public class HomeFragment extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot userSnapshot) {
                         Log.d(TAG, "onDataChange: users changed");
                         Log.d(TAG, "onDataChange: userSnapshot count " + userSnapshot.getChildrenCount());
-                        for (DataSnapshot ds : userSnapshot.getChildren()) {
-                            String instanceId = (String) ds.getValue();
-                            Log.d(TAG, "onDataChange: instance id " + instanceId);
-                            if (!instanceId.equals(PreferencesHelper.getToken(getActivity()))) {
-                                Log.d(TAG, "onDataChange: user found");
-                                Log.d(TAG, "onDataChange: instance id 2 " + instanceId);
-                                FirebaseDatabase.getInstance().getReference().child("user").orderByChild("key").limitToFirst(1)
-                                        .equalTo(instanceId).addChildEventListener(new UserChildListener(chatRoomSnapshot));
-                            }
+                        String instanceId1 = (String) userSnapshot.child("0").getValue();
+                        String instanceId2 = (String) userSnapshot.child("1").getValue();
+                        Log.d(TAG, "onDataChange: instance id " + instanceId1);
+                        Log.d(TAG, "onDataChange: instance id 2 " + instanceId2);
+
+                        if (instanceId1.equals(PreferencesHelper.getToken(mContext))) {
+                            Log.d(TAG, "onDataChange: user found");
+                            FirebaseDatabase.getInstance().getReference().child("user").orderByChild("key").limitToFirst(1)
+                                    .equalTo(instanceId2).addChildEventListener(new UserChildListener(chatRoomSnapshot));
+                        }
+                        if (instanceId2.equals(PreferencesHelper.getToken(mContext))) {
+                            Log.d(TAG, "onDataChange: user found 2");
+                            FirebaseDatabase.getInstance().getReference().child("user").orderByChild("key").limitToFirst(1)
+                                    .equalTo(instanceId1).addChildEventListener(new UserChildListener(chatRoomSnapshot));
                         }
                     }
 

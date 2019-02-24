@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +25,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
@@ -32,6 +34,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class AuthActivity extends AppCompatActivity {
+
+    private static final String TAG = AuthActivity.class.getSimpleName();
 
     // view component
     private LinearLayout authContainer;
@@ -84,6 +88,9 @@ public class AuthActivity extends AppCompatActivity {
         final String email = emailEditText.getText().toString().trim();
         final String password = passwordEditText.getText().toString().trim();
 
+        Log.d(TAG, "login: instance id di sharedpref " + PreferencesHelper.getToken(AuthActivity.this));
+
+
         FirebaseHelper.dbUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -102,11 +109,18 @@ public class AuthActivity extends AppCompatActivity {
 
     private boolean loginAsUser(DataSnapshot dataSnapshot, String email, String password) {
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
-            User user = ds.getValue(User.class);
+            final User user = ds.getValue(User.class);
             if (user.getEmail().equals(email) && user.getPassword().equals(md5(password))) {
                 PreferencesHelper.setUserFirebaseId(AuthActivity.this, user.getId());
-                FirebaseHelper.dbUser.child(PreferencesHelper.getUserFirebaseKey(this)).child("key").setValue(PreferencesHelper.getToken(this));
                 PreferencesHelper.setUserName(this, user.getName());
+                FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        Log.d(TAG, "onComplete: instance id waktu login awal " + task.getResult().getToken());
+                        Log.d(TAG, "onComplete: instance id di sharedpref " + PreferencesHelper.getToken(AuthActivity.this));
+                        updateInstanceId(task.getResult().getToken(), user.getKey());
+                    }
+                });
                 PreferencesHelper.setHasLogin(this, true);
                 finish();
                 startActivity(new Intent(this, MainActivity.class));
@@ -114,6 +128,57 @@ public class AuthActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    private void updateInstanceId(final String instanceId, final String oldInstanceId) {
+        PreferencesHelper.setTokenKey(this, instanceId);
+        FirebaseDatabase.getInstance().getReference("chatroom").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.d(TAG, "onDataChange: id database " + PreferencesHelper.getUserFirebaseKey(AuthActivity.this));
+                FirebaseHelper.dbUser.child(PreferencesHelper.getUserFirebaseKey(AuthActivity.this)).child("key").setValue(instanceId);
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    String idUser1 = (String) ds.child("users/0").getValue();
+                    String idUser2 = (String) ds.child("users/1").getValue();
+                    if (idUser1.equals(oldInstanceId)) {
+                        ds.child("users/0").getRef().setValue(instanceId);
+                        updateMessages(ds.child("messages"), instanceId, oldInstanceId);
+                    }
+                    if (idUser2.equals(oldInstanceId)) {
+                        ds.child("users/1").getRef().setValue(instanceId);
+                        updateMessages(ds.child("messages"), instanceId, oldInstanceId);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void updateMessages(DataSnapshot messages, final String instanceId, final String oldInstanceId) {
+        for (final DataSnapshot message: messages.getChildren()) {
+            FirebaseHelper.dbMessage.child((String) message.getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    String idReceiver = (String) dataSnapshot.child("idReceiver").getValue();
+                    String idSender = (String) dataSnapshot.child("idSender").getValue();
+                    if (idReceiver.equals(oldInstanceId)) {
+                        dataSnapshot.child("idReceiver").getRef().setValue(instanceId);
+                    }
+                    if (idSender.equals(oldInstanceId)) {
+                        dataSnapshot.child("idSender").getRef().setValue(instanceId);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 
     private String md5(final String s) {

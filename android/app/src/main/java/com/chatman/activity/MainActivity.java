@@ -21,6 +21,7 @@ import com.chatman.R;
 import com.chatman.fragment.BotFragment;
 import com.chatman.fragment.HomeFragment;
 import com.chatman.fragment.ProfileFragment;
+import com.chatman.helper.PreferencesHelper;
 
 public class MainActivity extends AppCompatActivity implements
         ProfileFragment.OnFragmentInteractionListener,

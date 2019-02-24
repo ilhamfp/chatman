@@ -44,5 +44,9 @@
 
     <string name="send_message_button">Send message button</string>
     <string name="message">Message</string>
+    <string name="insert_an_registered_email">Insert an registered email</string>
+    <string name="start_chat">Start Chat</string>
+    <string name="cancel">Cancel</string>
+    <string name="room_already_exists">Room is already exist</string>
 </resources>
 
