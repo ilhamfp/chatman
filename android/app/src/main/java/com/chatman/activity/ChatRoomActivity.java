@@ -189,7 +189,7 @@ public class ChatRoomActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         mSensorHelper.listenSensor(Sensor.TYPE_PROXIMITY);
-        mSensorHelper.listenSensor(Sensor.TYPE_GYROSCOPE);
+        mSensorHelper.listenSensor(Sensor.TYPE_ACCELEROMETER);
     }
 
     @Override

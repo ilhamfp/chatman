@@ -46,8 +46,12 @@ public class SensorHelper {
                         Toast.makeText(context, "You are too close to device", Toast.LENGTH_SHORT).show();
                     }
                 }
-                else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-                    //gyro
+                else if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                    //accelero
+                    float z = event.values[2];
+                    if (z > -10 && z < -8) {
+                        Toast.makeText(context, "Please don't use phone while resting down", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         };
