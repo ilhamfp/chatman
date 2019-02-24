@@ -87,7 +87,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         chatRv.setLayoutManager(linearLayoutManager);
         adapter = new ChatAdapter(chatList);
         chatRv.setAdapter(adapter);
-
+        chatRv.scrollToPosition(chatList.size() - 1);
         initializeListener();
     }
 
@@ -138,6 +138,7 @@ public class ChatRoomActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         chatList.add(dataSnapshot.getValue(Chat.class));
                         adapter.notifyDataSetChanged();
+                        chatRv.scrollToPosition(chatList.size() - 1);
                     }
 
                     @Override
