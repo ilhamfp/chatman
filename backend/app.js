@@ -41,7 +41,7 @@ chatrooms_db.on('child_added', chatroom => {
           title: chatSnap.child('nameSender').val(),
           body: chatSnap.child('message').val()
         },
-        token: chatSnap.child('receiver').val()
+        token: chatSnap.child('idReceiver').val()
       }
       admin.messaging().send(message)
         .then(response => {
