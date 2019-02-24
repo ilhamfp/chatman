@@ -105,6 +105,9 @@ public class ChatAdapter extends RecyclerView.Adapter {
                 break;
             case VIEW_TYPE_MESSAGE_RECEIVED:
                 ((ReceivedMessageHolder) holder).bind(message);
+                break;
+            default:
+                break;
         }
     }
 
