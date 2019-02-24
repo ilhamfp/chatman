@@ -3,6 +3,7 @@ package com.chatman.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,12 +100,18 @@ public class ChatAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Chat message = (Chat) items.get(position);
 
+        if (position == items.size() - 1) {
+            Log.d("notag", "onBindViewHolder: id sender " + message.getIdSender());
+            Log.d("notag", "onBindViewHolder: currentUser " + currentUser);
+        }
+
         switch (holder.getItemViewType()) {
             case VIEW_TYPE_MESSAGE_SENT:
                 ((SentMessageHolder) holder).bind(message);
                 break;
             case VIEW_TYPE_MESSAGE_RECEIVED:
                 ((ReceivedMessageHolder) holder).bind(message);
+                break;
         }
     }
 

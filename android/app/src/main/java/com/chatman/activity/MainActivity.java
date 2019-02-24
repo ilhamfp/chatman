@@ -25,6 +25,7 @@ import com.chatman.R;
 import com.chatman.fragment.BotFragment;
 import com.chatman.fragment.HomeFragment;
 import com.chatman.fragment.ProfileFragment;
+import com.chatman.helper.PreferencesHelper;
 import com.chatman.helper.SensorHelper;
 
 public class MainActivity extends AppCompatActivity implements

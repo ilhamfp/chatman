@@ -3,6 +3,7 @@ package com.chatman.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +19,9 @@ import com.bumptech.glide.Glide;
 import com.chatman.activity.AuthActivity;
 import com.chatman.R;
 import com.chatman.helper.PreferencesHelper;
+import com.google.firebase.iid.FirebaseInstanceId;
+
+import java.io.IOException;
 
 
 /**
@@ -72,9 +76,10 @@ public class ProfileFragment extends Fragment {
             {
                 Intent intent;
                 intent = new Intent(getContext(), AuthActivity.class);
-                PreferencesHelper.setUserFirebaseId(getContext(), "");
                 PreferencesHelper.setUserName(getContext(),"");
                 PreferencesHelper.setHasLogin(getContext(), false);
+
+                new DeleteInstanceId().execute();
                 getActivity().finish();
                 startActivity(intent);
             }
@@ -128,5 +133,18 @@ public class ProfileFragment extends Fragment {
         int drawableResourceId = getContext().getResources().getIdentifier(imageName, "drawable", getContext().getPackageName());
 
         return drawableResourceId;
+    }
+
+    private class DeleteInstanceId extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                FirebaseInstanceId.getInstance().deleteInstanceId();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 }

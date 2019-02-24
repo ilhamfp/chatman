@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="notification_channel_description">Notifikasi dari chat</string>
+    <string name="insert_an_registered_email">Insert an registered email</string>
+    <string name="start_chat">Start Chat</string>
+    <string name="cancel">Cancel</string>
+    <string name="room_already_exists">Room is already exist</string>
 </resources>
