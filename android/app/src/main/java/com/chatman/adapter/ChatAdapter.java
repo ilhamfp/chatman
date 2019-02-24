@@ -152,7 +152,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
             nameText.setText(message.getNameSender());
 
             // Insert the profile image from the URL into the ImageView.
-            Glide.with(itemView).load(R.drawable.robotic).into(profileImage);
+            Glide.with(itemView).load(R.mipmap.chatman_launcher_round).into(profileImage);
         }
 
     }
