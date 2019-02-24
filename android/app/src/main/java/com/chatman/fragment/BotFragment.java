@@ -79,10 +79,10 @@ public class BotFragment extends Fragment {
             public void onClick(View view) {
                 if (!message.getText().toString().equals("")){
                     Toast.makeText(context, "Send: "+message.getText().toString(), Toast.LENGTH_SHORT).show();
-                    Chat sendMessage = new Chat(PreferencesHelper.getUserFirebaseKey(context), PreferencesHelper.getUserName(context), BOT_KEY, Calendar.getInstance().getTime(), message.getText().toString());
+                    Chat sendMessage = new Chat(PreferencesHelper.getToken(context), PreferencesHelper.getUserName(context), BOT_KEY, Calendar.getInstance().getTime(), message.getText().toString());
                     String key = FirebaseHelper.dbMessage.push().getKey();
                     FirebaseHelper.dbMessage.child(key).setValue(sendMessage);
-
+                    message.setText("");
                     // BALASAN DARI BOT
                     Chat botMessage = new Chat(BOT_KEY, "ChatMan Bot", PreferencesHelper.getUserFirebaseKey(context), Calendar.getInstance().getTime(), "Halo! Selamat datang di ChatMan");
                     String botKey = FirebaseHelper.dbMessage.push().getKey();

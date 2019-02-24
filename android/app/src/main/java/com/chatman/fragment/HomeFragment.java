@@ -223,7 +223,7 @@ public class HomeFragment extends Fragment {
                         for (DataSnapshot ds : userSnapshot.getChildren()) {
                             String instanceId = (String) ds.getValue();
                             Log.d(TAG, "onDataChange: instance id " + instanceId);
-                            if (!instanceId.equals(PreferencesHelper.getToken(getContext()))) {
+                            if (!instanceId.equals(PreferencesHelper.getToken(getActivity()))) {
                                 Log.d(TAG, "onDataChange: user found");
                                 Log.d(TAG, "onDataChange: instance id 2 " + instanceId);
                                 FirebaseDatabase.getInstance().getReference().child("user").orderByChild("key").limitToFirst(1)

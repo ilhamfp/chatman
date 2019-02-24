@@ -78,7 +78,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
-        currentUser = PreferencesHelper.getUserFirebaseKey(context);
+        currentUser = PreferencesHelper.getToken(context);
         View view;
 
         if (viewType == VIEW_TYPE_MESSAGE_SENT) {
