@@ -21,6 +21,7 @@ import com.chatman.R;
 import com.chatman.activity.CompassActivity;
 import com.chatman.activity.MainActivity;
 import com.chatman.adapter.ChatAdapter;
+import com.chatman.helper.BotMessageHelper;
 import com.chatman.helper.FirebaseHelper;
 import com.chatman.helper.PreferencesHelper;
 import com.chatman.model.Chat;
@@ -85,16 +86,11 @@ public class BotFragment extends Fragment {
                     Chat sendMessage = new Chat(PreferencesHelper.getToken(context), PreferencesHelper.getUserName(context), BOT_TOKEN, Calendar.getInstance().getTime(), message.getText().toString());
                     String key = FirebaseHelper.dbMessage.push().getKey();
                     FirebaseHelper.dbMessage.child(key).setValue(sendMessage);
-                    if (message.getText().toString().equals("compass")) {
-                        Intent intent = new Intent(context, CompassActivity.class);
-                        context.startActivity(intent);
-                    }
-                    message.setText("");
-                    // BALASAN DARI BOT
-                    Chat botMessage = new Chat(BOT_TOKEN, "ChatMan Bot", PreferencesHelper.getToken(context), Calendar.getInstance().getTime(), "Halo! Selamat datang di ChatMan");
-                    String botKey = FirebaseHelper.dbMessage.push().getKey();
-                    FirebaseHelper.dbMessage.child(botKey).setValue(botMessage);
 
+                    //Bot response
+                    BotMessageHelper.respondBot(context, message.getText().toString());
+
+                    message.setText("");
                 }
             }
         });

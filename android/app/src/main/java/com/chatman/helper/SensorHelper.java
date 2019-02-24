@@ -7,6 +7,11 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.widget.Toast;
 
+import com.chatman.model.Chat;
+
+import java.util.Calendar;
+import java.util.Date;
+
 public class SensorHelper {
     public static final String TAG = SensorHelper.class.getSimpleName();
 
@@ -30,8 +35,14 @@ public class SensorHelper {
         sensorManager.unregisterListener(sensorListener);
     }
 
-    public static SensorEventListener initListener(final Context context) {
+    private static SensorEventListener initListener(final Context context) {
         return new SensorEventListener() {
+            private static final String BOT_TOKEN = "BOT_TOKEN";
+            private static final int delay = 10000;
+
+            private long proximityTime = 0;
+            private long acceleroTime = 0;
+
             @Override
             public void onAccuracyChanged(Sensor sensor,  int accuracy){
                 //you can leave it empty
@@ -42,15 +53,18 @@ public class SensorHelper {
                 if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
                     //proximity
                     float distance = event.values[0];
-                    if (distance <= 5) {
-                        Toast.makeText(context, "You are too close to device", Toast.LENGTH_SHORT).show();
+                    if ((distance <= 5) && (Calendar.getInstance().getTimeInMillis() - proximityTime > delay)) {
+                        proximityTime = Calendar.getInstance().getTimeInMillis();
+                        BotMessageHelper.sendBotMessage(context, "Don't stare too close to device\n" +
+                                "Your distance reached: " + Float.toString(distance) + "cm");
                     }
                 }
                 else if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                     //accelero
                     float z = event.values[2];
-                    if (z > -10 && z < -8) {
-                        Toast.makeText(context, "Please don't use phone while resting down", Toast.LENGTH_SHORT).show();
+                    if ((z > -10 && z < -8) && (Calendar.getInstance().getTimeInMillis() - proximityTime > delay)) {
+                        proximityTime = Calendar.getInstance().getTimeInMillis();
+                        BotMessageHelper.sendBotMessage(context, "Don't use phone while resting down!");
                     }
                 }
             }
