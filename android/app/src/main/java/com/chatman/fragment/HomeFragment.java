@@ -1,4 +1,4 @@
-package com.chatman;
+package com.chatman.fragment;
 
 import android.content.Context;
 import android.net.Uri;
@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.chatman.R;
 import com.chatman.adapter.ChatListAdapter;
 import com.chatman.helper.PreferencesHelper;
 import com.chatman.model.ChatList;
@@ -258,22 +259,7 @@ public class HomeFragment extends Fragment {
 
             }
         });
-//        chatLists = new ArrayList<>();
-//        chatLists.add(new ChatList(
-//                R.drawable.rama,
-//                "Yusuf Rahmat Pratama5",
-//                "Eh, gmn gmn?"
-//        ));
-//        chatLists.add(new ChatList(
-//                R.drawable.priagung,
-//                "Priagung Satyagama6",
-//                "Woi sini ke sekre 2 temani diriku yang kesepian"
-//        ));
-//        chatLists.add(new ChatList(
-//                R.drawable.ilham,
-//                "Ilham Firdausi Putra",
-//                "Mantap betul"
-//        ));
+
         return chatLists;
     }
 }

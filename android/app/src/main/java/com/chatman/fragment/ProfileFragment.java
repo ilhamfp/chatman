@@ -1,4 +1,4 @@
-package com.chatman;
+package com.chatman.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,9 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.chatman.activity.AuthActivity;
+import com.chatman.R;
 import com.chatman.helper.PreferencesHelper;
-
-import org.w3c.dom.Text;
 
 
 /**

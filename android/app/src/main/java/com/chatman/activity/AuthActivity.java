@@ -1,4 +1,4 @@
-package com.chatman;
+package com.chatman.activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,15 +14,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.chatman.R;
 import com.chatman.helper.FirebaseHelper;
 import com.chatman.helper.PreferencesHelper;
 import com.chatman.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;

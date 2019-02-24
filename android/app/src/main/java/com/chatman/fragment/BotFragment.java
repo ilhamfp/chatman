@@ -1,7 +1,6 @@
-package com.chatman;
+package com.chatman.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,12 +16,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.chatman.R;
 import com.chatman.adapter.ChatAdapter;
-import com.chatman.adapter.ChatListAdapter;
 import com.chatman.helper.FirebaseHelper;
 import com.chatman.helper.PreferencesHelper;
 import com.chatman.model.Chat;
-import com.chatman.model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
