@@ -1,6 +1,7 @@
 package com.chatman.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,6 +18,8 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.chatman.R;
+import com.chatman.activity.CompassActivity;
+import com.chatman.activity.MainActivity;
 import com.chatman.adapter.ChatAdapter;
 import com.chatman.helper.FirebaseHelper;
 import com.chatman.helper.PreferencesHelper;
@@ -82,6 +85,10 @@ public class BotFragment extends Fragment {
                     Chat sendMessage = new Chat(PreferencesHelper.getToken(context), PreferencesHelper.getUserName(context), BOT_TOKEN, Calendar.getInstance().getTime(), message.getText().toString());
                     String key = FirebaseHelper.dbMessage.push().getKey();
                     FirebaseHelper.dbMessage.child(key).setValue(sendMessage);
+                    if (message.getText().toString().equals("compass")) {
+                        Intent intent = new Intent(context, CompassActivity.class);
+                        context.startActivity(intent);
+                    }
                     message.setText("");
                     // BALASAN DARI BOT
                     Chat botMessage = new Chat(BOT_TOKEN, "ChatMan Bot", PreferencesHelper.getToken(context), Calendar.getInstance().getTime(), "Halo! Selamat datang di ChatMan");
