@@ -37,8 +37,28 @@ Detect and remind you when you are too close to the screen and using face down
 <p align="center"> <img src="photoshop_assets/Readme_Screenshot/service.png" alt="service" width="250"/>
 
 ### Weather Today
+Get up-to-date weather information on your location in meaningful and understandable format
+
+<p align="center"> <img src="photoshop_assets/Readme_Screenshot/weather.png" alt="weather" width="250"/>
 
 ### Compass
+Never lost your heading by using accurate compass built-in with ChatMan
+
+<p align="center"> <img src="photoshop_assets/Readme_Screenshot/compass.png" alt="compass" width="250"/>
 
 ### Send Email
+Quickly jump to your preferred email app pre-written through your chat to ChatMan
+
+<p align="center"> <img src="photoshop_assets/Readme_Screenshot/email.png" alt="email" width="250"/>
+
+## Technology
+- Written for [Android](https://www.android.com) platform with [Java](https://www.java.com/) and [XML](https://www.w3.org/XML/)
+- Database, messaging, and push notification powered by [Google Firebase](https://firebase.google.com)
+- Push notification backend made with [Node.js](https://nodejs.org)
+- Weather API provided by [OpenWeatherMap](https://openweathermap.org)
+
+## Authors
+Yusuf Rahmat Pratama
+Priagung Satyagama
+Ilham Firdausi Putra
 
