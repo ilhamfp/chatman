@@ -1,6 +1,7 @@
 package com.chatman.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -29,6 +30,7 @@ import com.chatman.fragment.HomeFragment;
 import com.chatman.fragment.ProfileFragment;
 import com.chatman.helper.PreferencesHelper;
 import com.chatman.helper.SensorHelper;
+import com.chatman.service.DetectionService;
 
 public class MainActivity extends AppCompatActivity implements
         ProfileFragment.OnFragmentInteractionListener,
@@ -106,8 +108,9 @@ public class MainActivity extends AppCompatActivity implements
         }
         context = this;
 
-        //Set sensor
-        mSensorHelper = new SensorHelper(context);
+        //Start detection sensor
+        Intent intent = new Intent(this, DetectionService.class);
+        startService(intent);
 
         // Bottom Navigation Bar
         bottomNavbar = findViewById(R.id.navigation);
@@ -173,18 +176,5 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onFragmentInteraction(Uri uri){
         //you can leave it empty
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mSensorHelper.listenSensor(Sensor.TYPE_PROXIMITY);
-        mSensorHelper.listenSensor(Sensor.TYPE_ACCELEROMETER);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mSensorHelper.unlistenSensor();
     }
 }
