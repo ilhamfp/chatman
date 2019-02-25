@@ -89,6 +89,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
         public void bind(ChatList item) {
             Glide.with(itemView).load(item.getAvatarResource()).into(chatListImage);
             chatListLastMessage.setText(item.getLastMessage());
+
             chatListName.setText(item.getName());
         }
 
