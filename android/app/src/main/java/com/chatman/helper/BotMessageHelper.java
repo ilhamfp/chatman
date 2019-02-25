@@ -42,7 +42,7 @@ public class BotMessageHelper {
             String arr[] = message.split(" ", 3);
             Intent intent = new Intent(Intent.ACTION_SENDTO);
             intent.setData(Uri.parse("mailto:")); // only email apps should handle this
-            intent.putExtra(Intent.EXTRA_EMAIL, arr[1]);
+            intent.putExtra(Intent.EXTRA_EMAIL, new String[] {arr[1]});
             intent.putExtra(Intent.EXTRA_SUBJECT, arr[2].split(";", 2)[0]);
             intent.putExtra(Intent.EXTRA_TEXT, arr[2].split(";", 2)[1]);
             context.startActivity(intent);
