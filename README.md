@@ -17,7 +17,7 @@ Built for ITB-IF3111 class assignment.
 
 2. Install the apk
 
-3. (Optional) To enable push notification, start the backend server by executing at directory backend/
+3. (Optional) To enable push notification, start the backend server by executing at directory `backend/`
 ```
 npm install && node app.js
 ```
