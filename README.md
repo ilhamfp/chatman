@@ -58,7 +58,7 @@ Quickly jump to your preferred email app pre-written through your chat to ChatMa
 - Weather API provided by [OpenWeatherMap](https://openweathermap.org)
 
 ## Authors
-Yusuf Rahmat Pratama<br>
-Priagung Satyagama<br>
-Ilham Firdausi Putra
+Yusuf Rahmat Pratama - *Developer*<br>
+Priagung Satyagama - *Developer*<br>
+Ilham Firdausi Putra - *Developer*
 
