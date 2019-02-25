@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.chatman.R;
+import com.chatman.fragment.LoadingDialogFragment;
 import com.chatman.helper.FirebaseHelper;
 import com.chatman.helper.PreferencesHelper;
 import com.chatman.model.User;
@@ -49,6 +50,7 @@ public class AuthActivity extends AppCompatActivity {
     private ImageView authImageView;
     private Context context;
     private TextView authTextView;
+    private LoadingDialogFragment loadingDialog;
 
 
     // activity state
@@ -80,6 +82,7 @@ public class AuthActivity extends AppCompatActivity {
         switchTextView = findViewById(R.id.auth_switch);
         authImageView = findViewById(R.id.auth_logo);
         authTextView = findViewById(R.id.auth_word);
+        loadingDialog = new LoadingDialogFragment(this);
         Glide.with(this).load(getImage("logo")).fitCenter().into(authImageView);
     }
 
@@ -87,7 +90,7 @@ public class AuthActivity extends AppCompatActivity {
     public void login(final View view) {
         final String email = emailEditText.getText().toString().trim();
         final String password = passwordEditText.getText().toString().trim();
-
+        loadingDialog.show();
         Log.d(TAG, "login: instance id di sharedpref " + PreferencesHelper.getToken(AuthActivity.this));
 
 
@@ -96,12 +99,13 @@ public class AuthActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (!loginAsUser(dataSnapshot, email, password)) {
                     showSnackBar((AuthActivity)view.getContext(), "Email or password is incorrect!");
+                    loadingDialog.dismiss();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                loadingDialog.dismiss();
             }
         });
 
@@ -121,10 +125,10 @@ public class AuthActivity extends AppCompatActivity {
                         updateInstanceId(task.getResult().getToken(), user.getKey());
                     }
                 });
-                PreferencesHelper.setHasLogin(this, true);
-                finish();
-                startActivity(new Intent(this, MainActivity.class));
                 return true;
+            }
+            else {
+                loadingDialog.dismiss();
             }
         }
         return false;
@@ -137,17 +141,26 @@ public class AuthActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.d(TAG, "onDataChange: id database " + PreferencesHelper.getUserFirebaseKey(AuthActivity.this));
                 FirebaseHelper.dbUser.child(PreferencesHelper.getUserFirebaseKey(AuthActivity.this)).child("key").setValue(instanceId);
+                Boolean found = false;
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     String idUser1 = (String) ds.child("users/0").getValue();
                     String idUser2 = (String) ds.child("users/1").getValue();
                     if (idUser1.equals(oldInstanceId)) {
                         ds.child("users/0").getRef().setValue(instanceId);
                         updateMessages(ds.child("messages"), instanceId, oldInstanceId);
+                        found = true;
                     }
                     if (idUser2.equals(oldInstanceId)) {
                         ds.child("users/1").getRef().setValue(instanceId);
                         updateMessages(ds.child("messages"), instanceId, oldInstanceId);
+                        found = true;
                     }
+                }
+                if (!found) {
+                    loadingDialog.dismiss();
+                    PreferencesHelper.setHasLogin(AuthActivity.this, true);
+                    finish();
+                    startActivity(new Intent(AuthActivity.this, MainActivity.class));
                 }
             }
 
@@ -175,11 +188,16 @@ public class AuthActivity extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                    loadingDialog.dismiss();
                 }
             });
         }
+        loadingDialog.dismiss();
+        PreferencesHelper.setHasLogin(AuthActivity.this, true);
+        finish();
+        startActivity(new Intent(AuthActivity.this, MainActivity.class));
     }
+
 
     private String md5(final String s) {
         final String MD5 = "MD5";
