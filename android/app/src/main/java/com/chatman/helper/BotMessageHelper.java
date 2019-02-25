@@ -1,7 +1,11 @@
 package com.chatman.helper;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 
 import com.chatman.activity.CompassActivity;
 import com.chatman.model.Chat;
@@ -19,7 +23,13 @@ public class BotMessageHelper {
         }
         else if (message.equals("weather today")) {
             GpsHelper gps = new GpsHelper(context);
-            new WeatherService(context).execute(gps.getLocation());
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions((Activity) context, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
+                sendBotMessage(context, "GPS not allowed");
+            }
+            else {
+                new WeatherService(context).execute(gps.getLocation());
+            }
         }
         else sendBotMessage(context, "Halo! Selamat datang di ChatMan");
     }

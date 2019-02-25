@@ -119,6 +119,7 @@ public class GpsHelper extends Service implements LocationListener {
         if (location != null) {
             return location;
         }
+        return initLocation();
     }
     /**
      * Function to get latitude
