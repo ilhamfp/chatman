@@ -92,8 +92,6 @@ public class ChatRoomActivity extends AppCompatActivity {
         chatRv.setAdapter(adapter);
         chatRv.scrollToPosition(chatList.size() - 1);
         initializeListener();
-
-        mSensorHelper = new SensorHelper(this);
     }
 
     private void initializeListener() {
@@ -183,18 +181,5 @@ public class ChatRoomActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mSensorHelper.listenSensor(Sensor.TYPE_PROXIMITY);
-        mSensorHelper.listenSensor(Sensor.TYPE_ACCELEROMETER);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mSensorHelper.unlistenSensor();
     }
 }
