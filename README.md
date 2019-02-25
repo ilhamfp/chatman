@@ -7,5 +7,5 @@
 ChatMan is a multi purpose chatbot built for ITB-IF3111 class assignment.  
 
 ## Display
-<p align="center"> <img src="photoshop_assets/login_page.jpg" alt="login_page" width="250"/>  <img src="photoshop_assets/bot_chatroom.jpg" alt="bot_chatroom" width="250"/> </p>  
+<p align="center"> <img src="photoshop_assets/login_page.png" alt="login_page" width="250"/>  <img src="photoshop_assets/bot_chatroom.png" alt="bot_chatroom" width="250"/> </p>  
 
