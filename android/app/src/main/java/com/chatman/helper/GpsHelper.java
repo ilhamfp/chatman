@@ -44,9 +44,9 @@ public class GpsHelper extends Service implements LocationListener {
     protected LocationManager locationManager;
     public GpsHelper(Context context) {
         this.mContext = context;
-        getLocation();
+        initLocation();
     }
-    public Location getLocation() {
+    public Location initLocation() {
         try {
             locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
             // getting GPS status
@@ -113,6 +113,11 @@ public class GpsHelper extends Service implements LocationListener {
     public void stopUsingGPS(){
         if(locationManager != null){
             locationManager.removeUpdates(GpsHelper.this);
+        }
+    }
+    public Location getLocation() {
+        if (location != null) {
+            return location;
         }
     }
     /**
