@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.chatman.R;
 import com.chatman.adapter.ChatListAdapter;
@@ -45,6 +46,7 @@ public class HomeFragment extends Fragment {
     private List<ChatList> chatLists;
     private FloatingActionButton fab;
     private StartChatDialogFragment dialog;
+    private ProgressBar progressBar;
 
     private Context mContext;
 
@@ -79,6 +81,8 @@ public class HomeFragment extends Fragment {
                 dialog.show(getFragmentManager(), "ADD_ROOM");
             }
         });
+
+        progressBar = view.findViewById(R.id.progressBarLoading);
 
         // Recycler View
         recycler = view.findViewById(R.id.chat_list_rv);
@@ -156,13 +160,14 @@ public class HomeFragment extends Fragment {
                             chatLists.remove(chatList);
                         }
                     }
+                    progressBar.setVisibility(View.GONE);
                     chatLists.add(new ChatList(R.mipmap.chatman_launcher_round, sender, message, idChatRoom));
                     adapter.notifyDataSetChanged();
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                    progressBar.setVisibility(View.GONE);
                 }
             });
         }
@@ -204,6 +209,7 @@ public class HomeFragment extends Fragment {
                         chatLists.remove(chatList);
                     }
                 }
+                progressBar.setVisibility(View.GONE);
                 chatLists.add(new ChatList(R.mipmap.chatman_launcher_round, sender, "", idChatRoom));
                 adapter.notifyDataSetChanged();
             }
@@ -219,13 +225,15 @@ public class HomeFragment extends Fragment {
         public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
 
         @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {}
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
     // Todo: Ganti data dummmy jadi data asli ngambil dari database
     // sorry for bad code :(
     private List<ChatList> getChatLists() {
-
+        progressBar.setVisibility(View.VISIBLE);
         FirebaseDatabase.getInstance().getReference().child("chatroom").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull final DataSnapshot chatRoomSnapshot, @Nullable String s) {
@@ -240,22 +248,35 @@ public class HomeFragment extends Fragment {
                         String instanceId2 = (String) userSnapshot.child("1").getValue();
                         Log.d(TAG, "onDataChange: instance id " + instanceId1);
                         Log.d(TAG, "onDataChange: instance id 2 " + instanceId2);
-
+                        Boolean found = false;
                         if (instanceId1.equals(PreferencesHelper.getToken(mContext))) {
+                            found = true;
+                            if (instanceId2.equals("BOT_TOKEN")) {
+                                found = false;
+                            }
                             Log.d(TAG, "onDataChange: user found");
                             FirebaseDatabase.getInstance().getReference().child("user").orderByChild("key").limitToFirst(1)
                                     .equalTo(instanceId2).addChildEventListener(new UserChildListener(chatRoomSnapshot));
                         }
                         if (instanceId2.equals(PreferencesHelper.getToken(mContext))) {
+                            found = true;
+                            if (instanceId1.equals("BOT_TOKEN")) {
+                                found = false;
+                            }
                             Log.d(TAG, "onDataChange: user found 2");
                             FirebaseDatabase.getInstance().getReference().child("user").orderByChild("key").limitToFirst(1)
                                     .equalTo(instanceId1).addChildEventListener(new UserChildListener(chatRoomSnapshot));
+                        }
+
+                        if (!found) {
+                            Log.d(TAG, "onDataChange: not found");
+                            progressBar.setVisibility(View.GONE);
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
             }
@@ -277,7 +298,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                progressBar.setVisibility(View.GONE);
             }
         });
 

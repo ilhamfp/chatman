@@ -74,14 +74,9 @@ public class ChatRoomActivity extends AppCompatActivity {
         chatEt = findViewById(R.id.chat_et);
         chatSend = findViewById(R.id.chat_send);
         toolbarName = findViewById(R.id.toolbar_name);
-        if (savedInstanceState != null) {
-
-        }
-        else {
-            Intent intent = getIntent();
-            toolbarName.setText(intent.getStringExtra("name"));
-            chatRoomId = intent.getStringExtra("chatRoomId");
-        }
+        Intent intent = getIntent();
+        toolbarName.setText(intent.getStringExtra("name"));
+        chatRoomId = intent.getStringExtra("chatRoomId");
 
         chatList = new ArrayList<>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);

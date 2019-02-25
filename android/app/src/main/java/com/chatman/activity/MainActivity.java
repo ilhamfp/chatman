@@ -8,6 +8,7 @@ import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -37,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements
     private BottomNavigationView bottomNavbar;
     private SensorHelper mSensorHelper;
 
+    private int navigationId;
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -44,19 +48,44 @@ public class MainActivity extends AppCompatActivity implements
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_profile:
-                    loadFragment(new ProfileFragment()); break;
+                    loadFragment(new ProfileFragment());
+                    navigationId = R.id.navigation_profile;
+                    break;
                 case R.id.navigation_home:
-                    loadFragment(new HomeFragment()); break;
+                    loadFragment(new HomeFragment());
+                    navigationId = R.id.navigation_home;
+                    break;
                 case R.id.navigation_bot:
-                    loadFragment(new BotFragment()); break;
+                    loadFragment(new BotFragment());
+                    navigationId = R.id.navigation_bot;
+                    break;
             }
+            Log.d("navid", "onNavigationItemSelected: navid " + navigationId);
             return true;
         }
     };
 
+
+
+//    @Override
+//    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+//        Log.d("navid", "onSaveInstanceState: " + navigationId);
+//        outState.putInt("nav_id", navigationId);
+//        super.onSaveInstanceState(outState, outPersistentState);
+//    }
+
+    @Override
+    public void onSaveInstanceState (Bundle outState) {
+        Log.d("navid", "onSaveInstanceState: " + navigationId);
+        super.onSaveInstanceState(outState);
+        outState.putInt("nav_id", navigationId);
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -86,6 +115,28 @@ public class MainActivity extends AppCompatActivity implements
 
         //Set laman pertama
         loadFragment(new ProfileFragment());
+
+        if (savedInstanceState != null) {
+            Log.d("savedinstancestate", "onCreate: not null");
+            navigationId = savedInstanceState.getInt("nav_id");
+            Log.d("savedinstancestate", "onCreate: navid " + navigationId);
+            Log.d("savedinstancestate", "onCreate: navprofile " + R.id.navigation_profile);
+            Log.d("savedinstancestate", "onCreate: navhome " + R.id.navigation_home);
+            Log.d("savedinstancestate", "onCreate: navbot " + R.id.navigation_bot);
+
+            bottomNavbar.setSelectedItemId(navigationId);
+            switch (navigationId) {
+                case R.id.navigation_profile:
+                    loadFragment(new ProfileFragment());
+                    break;
+                case R.id.navigation_home:
+                    loadFragment(new HomeFragment());
+                    break;
+                case R.id.navigation_bot:
+                    loadFragment(new BotFragment());
+                    break;
+            }
+        }
     }
 
     @Override
