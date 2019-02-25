@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import com.chatman.helper.PreferencesHelper;
 import com.chatman.model.Chat;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -84,9 +86,22 @@ public class BotFragment extends Fragment {
                 if (!message.getText().toString().equals("")){
                     Toast.makeText(context, "Send: "+message.getText().toString(), Toast.LENGTH_SHORT).show();
                     Chat sendMessage = new Chat(PreferencesHelper.getToken(context), PreferencesHelper.getUserName(context), BOT_TOKEN, Calendar.getInstance().getTime(), message.getText().toString());
-                    String key = FirebaseHelper.dbMessage.push().getKey();
+                    final String key = FirebaseHelper.dbMessage.push().getKey();
                     FirebaseHelper.dbMessage.child(key).setValue(sendMessage);
+                    FirebaseDatabase.getInstance().getReference().child("chatroom").child(PreferencesHelper.getBotRoom(context)).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            String index = String.valueOf(dataSnapshot.child("messages").getChildrenCount());
+                            Log.d("BotMessageHelper", "onDataChange: index " + index);
+                            FirebaseDatabase.getInstance().getReference("chatroom/" + PreferencesHelper.getBotRoom(context) + "/messages")
+                                    .child(index).setValue(key);
+                        }
 
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                     //Bot response
                     BotMessageHelper.respondBot(context, message.getText().toString());
 

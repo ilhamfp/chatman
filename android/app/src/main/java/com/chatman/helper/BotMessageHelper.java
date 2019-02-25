@@ -5,11 +5,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 import com.chatman.activity.CompassActivity;
 import com.chatman.model.Chat;
 import com.chatman.service.WeatherService;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 
@@ -34,9 +40,25 @@ public class BotMessageHelper {
         else sendBotMessage(context, "Halo! Selamat datang di ChatMan");
     }
 
-    public static void sendBotMessage(Context context, String message) {
+    public static void sendBotMessage(final Context context, String message) {
         Chat botMessage = new Chat(BOT_TOKEN, "ChatMan Bot", PreferencesHelper.getToken(context), Calendar.getInstance().getTime(), message);
-        String botKey = FirebaseHelper.dbMessage.push().getKey();
+        final String botKey = FirebaseHelper.dbMessage.push().getKey();
         FirebaseHelper.dbMessage.child(botKey).setValue(botMessage);
+
+        FirebaseDatabase.getInstance().getReference().child("chatroom").child(PreferencesHelper.getBotRoom(context)).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String index = String.valueOf(dataSnapshot.child("messages").getChildrenCount());
+                Log.d("BotMessageHelper", "onDataChange: index " + index);
+                FirebaseDatabase.getInstance().getReference("chatroom/" + PreferencesHelper.getBotRoom(context) + "/messages")
+                        .child(index).setValue(botKey);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

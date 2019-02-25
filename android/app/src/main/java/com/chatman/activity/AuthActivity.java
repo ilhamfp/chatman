@@ -228,9 +228,12 @@ public class AuthActivity extends AppCompatActivity {
         final String name = nameEditText.getText().toString().trim();
         final String email = emailEditText.getText().toString().trim();
         final String password = passwordEditText.getText().toString().trim();
-        String confirm = confirmEditText.getText().toString().trim();
-
+        final String confirm = confirmEditText.getText().toString().trim();
+        Log.d(TAG, "register: name " + name);
+        Log.d(TAG, "register: email " + email);
+        Log.d(TAG, "register: password " + password);
         if (password.equals(confirm)) {
+            loadingDialog.show();
             final boolean[] emailUnique = new boolean[] {true};
             FirebaseHelper.dbUser.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -240,33 +243,45 @@ public class AuthActivity extends AppCompatActivity {
                         if (user.getEmail().equalsIgnoreCase(email)) {
                             emailUnique[0] = false;
                         }
+                        if (emailUnique[0] && !name.equals("") && !email.equals("") && !password.equals("") && !confirm.equals("") ) {
+                            FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                    String idFirebase = FirebaseHelper.dbUser.push().getKey();
+                                    String instanceId = task.getResult().getToken();
+                                    User user;
+                                    user = new User(instanceId, name, email, md5(password), idFirebase);
+                                    PreferencesHelper.setUserFirebaseId(AuthActivity.this, user.getId());
+                                    PreferencesHelper.setTokenKey(AuthActivity.this, user.getKey());
+                                    PreferencesHelper.setUserName(AuthActivity.this, user.getName());
+                                    PreferencesHelper.setHasLogin(AuthActivity.this, true);
+
+                                    FirebaseHelper.dbUser.child(idFirebase).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            String idRoom = FirebaseDatabase.getInstance().getReference("chatroom").push().getKey();
+                                            PreferencesHelper.setBotRoom(AuthActivity.this, idRoom);
+                                            FirebaseDatabase.getInstance().getReference("chatroom/" + idRoom)
+                                                    .child("users/0").setValue("BOT_TOKEN");
+                                            FirebaseDatabase.getInstance().getReference("chatroom/" + idRoom)
+                                                    .child("users/1").setValue(PreferencesHelper.getToken(AuthActivity.this));
+                                            loadingDialog.dismiss();
+                                            finish();
+                                            startActivity(new Intent(AuthActivity.this, MainActivity.class));
+                                        }
+                                    });
+                                }
+                            });
+                        } else {
+                            loadingDialog.dismiss();
+                            showSnackBar(AuthActivity.this, "Email has been used");
+                        }
                     }
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) { }
             });
 
-            if (emailUnique[0] && !name.equals("") && !email.equals("") && !password.equals("") && !confirm.equals("") ) {
-                FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        String idFirebase = FirebaseHelper.dbUser.push().getKey();
-                        String instanceId = task.getResult().getToken();
-                        User user;
-                        user = new User(instanceId, name, email, md5(password), idFirebase);
-                        PreferencesHelper.setUserFirebaseId(AuthActivity.this, user.getId());
-                        PreferencesHelper.setTokenKey(AuthActivity.this, user.getKey());
-                        PreferencesHelper.setUserName(AuthActivity.this, user.getName());
-                        PreferencesHelper.setHasLogin(AuthActivity.this, true);
-
-                        FirebaseHelper.dbUser.child(idFirebase).setValue(user);
-                        finish();
-                        startActivity(new Intent(AuthActivity.this, MainActivity.class));
-                    }
-                });
-            } else {
-                showSnackBar(this, "Email has been used");
-            }
         } else {
             showSnackBar(this, "Password did not match");
         }

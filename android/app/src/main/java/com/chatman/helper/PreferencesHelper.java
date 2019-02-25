@@ -10,6 +10,7 @@ public class PreferencesHelper {
     public static final String USER_NAME = "user_name";
     public static final String HAS_LOGIN = "has_login";
     public static final String TOKEN= "token";
+    private static final String BOT_CHAT_ROOM = "bot_chat_room";
 
     private static void setBooleanPreferences(Context context, String key, boolean value) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -78,6 +79,14 @@ public class PreferencesHelper {
 
     public static String getToken(Context context) {
         return getStringPreferences(context, TOKEN);
+    }
+
+    public static String getBotRoom(Context context) {
+        return getStringPreferences(context, BOT_CHAT_ROOM);
+    }
+
+    public static void setBotRoom(Context context, String string) {
+        setStringPreferences(context, BOT_CHAT_ROOM, string);
     }
 
 }
