@@ -243,44 +243,49 @@ public class AuthActivity extends AppCompatActivity {
                         if (user.getEmail().equalsIgnoreCase(email)) {
                             emailUnique[0] = false;
                         }
-                        if (emailUnique[0] && !name.equals("") && !email.equals("") && !password.equals("") && !confirm.equals("") ) {
-                            FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                                    String idFirebase = FirebaseHelper.dbUser.push().getKey();
-                                    String instanceId = task.getResult().getToken();
-                                    User user;
-                                    user = new User(instanceId, name, email, md5(password), idFirebase);
-                                    PreferencesHelper.setUserFirebaseId(AuthActivity.this, user.getId());
-                                    PreferencesHelper.setTokenKey(AuthActivity.this, user.getKey());
-                                    PreferencesHelper.setUserName(AuthActivity.this, user.getName());
-                                    PreferencesHelper.setHasLogin(AuthActivity.this, true);
 
-                                    FirebaseHelper.dbUser.child(idFirebase).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            String idRoom = FirebaseDatabase.getInstance().getReference("chatroom").push().getKey();
-                                            PreferencesHelper.setBotRoom(AuthActivity.this, idRoom);
-                                            FirebaseDatabase.getInstance().getReference("chatroom/" + idRoom)
-                                                    .child("users/0").setValue("BOT_TOKEN");
-                                            FirebaseDatabase.getInstance().getReference("chatroom/" + idRoom)
-                                                    .child("users/1").setValue(PreferencesHelper.getToken(AuthActivity.this));
-                                            loadingDialog.dismiss();
-                                            finish();
-                                            startActivity(new Intent(AuthActivity.this, MainActivity.class));
-                                        }
-                                    });
-                                }
-                            });
-                        } else {
-                            loadingDialog.dismiss();
-                            showSnackBar(AuthActivity.this, "Email has been used");
-                        }
                     }
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) { }
             });
+
+            if (emailUnique[0] && !name.equals("") && !email.equals("") && !password.equals("") && !confirm.equals("") ) {
+                Log.d(TAG, "onDataChange: register : masuk");
+                FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        String idFirebase = FirebaseHelper.dbUser.push().getKey();
+                        String instanceId = task.getResult().getToken();
+                        Log.d(TAG, "onComplete: idFirebase " + idFirebase);
+                        Log.d(TAG, "onComplete: idInstance " + instanceId);
+                        User user;
+                        user = new User(instanceId, name, email, md5(password), idFirebase);
+                        PreferencesHelper.setUserFirebaseId(AuthActivity.this, user.getId());
+                        PreferencesHelper.setTokenKey(AuthActivity.this, user.getKey());
+                        PreferencesHelper.setUserName(AuthActivity.this, user.getName());
+                        PreferencesHelper.setHasLogin(AuthActivity.this, true);
+
+                        FirebaseHelper.dbUser.child(idFirebase).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                String idRoom = FirebaseDatabase.getInstance().getReference("chatroom").push().getKey();
+                                PreferencesHelper.setBotRoom(AuthActivity.this, idRoom);
+                                FirebaseDatabase.getInstance().getReference("chatroom/" + idRoom)
+                                        .child("users/0").setValue("BOT_TOKEN");
+                                FirebaseDatabase.getInstance().getReference("chatroom/" + idRoom)
+                                        .child("users/1").setValue(PreferencesHelper.getToken(AuthActivity.this));
+                                loadingDialog.dismiss();
+                                finish();
+                                startActivity(new Intent(AuthActivity.this, MainActivity.class));
+                            }
+                        });
+                    }
+                });
+            } else {
+                loadingDialog.dismiss();
+                showSnackBar(AuthActivity.this, "Email has been used");
+            }
 
         } else {
             showSnackBar(this, "Password did not match");
