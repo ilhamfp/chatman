@@ -150,7 +150,7 @@ public class HomeFragment extends Fragment {
             String messageId = (String) dataSnapshot.getValue();
             Log.d(TAG, "onDataChange: messageId " + messageId);
             FirebaseDatabase.getInstance().getReference().child("message")
-                    .child(messageId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    .child(messageId).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     String message = (String) dataSnapshot.child("message").getValue();
@@ -239,38 +239,40 @@ public class HomeFragment extends Fragment {
             public void onChildAdded(@NonNull final DataSnapshot chatRoomSnapshot, @Nullable String s) {
                 Log.d(TAG, "onDataChange: chatroom changed");
                 Log.d(TAG, "onDataChange: chatroom key " + chatRoomSnapshot.getKey());
-                chatRoomSnapshot.getRef().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+                chatRoomSnapshot.getRef().child("users").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot userSnapshot) {
                         Log.d(TAG, "onDataChange: users changed");
                         Log.d(TAG, "onDataChange: userSnapshot count " + userSnapshot.getChildrenCount());
                         String instanceId1 = (String) userSnapshot.child("0").getValue();
                         String instanceId2 = (String) userSnapshot.child("1").getValue();
-                        Log.d(TAG, "onDataChange: instance id " + instanceId1);
-                        Log.d(TAG, "onDataChange: instance id 2 " + instanceId2);
-                        Boolean found = false;
-                        if (instanceId1.equals(PreferencesHelper.getToken(mContext))) {
-                            found = true;
-                            if (instanceId2.equals("BOT_TOKEN")) {
-                                found = false;
+                        if (instanceId1 != null && instanceId2 != null){
+                            Log.d(TAG, "onDataChange: instance id " + instanceId1);
+                            Log.d(TAG, "onDataChange: instance id 2 " + instanceId2);
+                            Boolean found = false;
+                            if (instanceId1.equals(PreferencesHelper.getToken(mContext))) {
+                                found = true;
+                                if (instanceId2.equals("BOT_TOKEN")) {
+                                    found = false;
+                                }
+                                Log.d(TAG, "onDataChange: user found");
+                                FirebaseDatabase.getInstance().getReference().child("user").orderByChild("key").limitToFirst(1)
+                                        .equalTo(instanceId2).addChildEventListener(new UserChildListener(chatRoomSnapshot));
                             }
-                            Log.d(TAG, "onDataChange: user found");
-                            FirebaseDatabase.getInstance().getReference().child("user").orderByChild("key").limitToFirst(1)
-                                    .equalTo(instanceId2).addChildEventListener(new UserChildListener(chatRoomSnapshot));
-                        }
-                        if (instanceId2.equals(PreferencesHelper.getToken(mContext))) {
-                            found = true;
-                            if (instanceId1.equals("BOT_TOKEN")) {
-                                found = false;
+                            if (instanceId2.equals(PreferencesHelper.getToken(mContext))) {
+                                found = true;
+                                if (instanceId1.equals("BOT_TOKEN")) {
+                                    found = false;
+                                }
+                                Log.d(TAG, "onDataChange: user found 2");
+                                FirebaseDatabase.getInstance().getReference().child("user").orderByChild("key").limitToFirst(1)
+                                        .equalTo(instanceId1).addChildEventListener(new UserChildListener(chatRoomSnapshot));
                             }
-                            Log.d(TAG, "onDataChange: user found 2");
-                            FirebaseDatabase.getInstance().getReference().child("user").orderByChild("key").limitToFirst(1)
-                                    .equalTo(instanceId1).addChildEventListener(new UserChildListener(chatRoomSnapshot));
-                        }
 
-                        if (!found) {
-                            Log.d(TAG, "onDataChange: not found");
-                            progressBar.setVisibility(View.GONE);
+                            if (!found) {
+                                Log.d(TAG, "onDataChange: not found");
+                                progressBar.setVisibility(View.GONE);
+                            }
                         }
                     }
 
