@@ -38,6 +38,9 @@ public class WeatherService extends AsyncTask<Location, Void, String> {
             cl.setTimeInMillis(jsonObject.getLong("dt")*1000);
             String date = "" + cl.get(Calendar.DAY_OF_MONTH) + "/" + cl.get(Calendar.MONTH + 1) + "/" + cl.get(Calendar.YEAR);
             String time = "" + cl.get(Calendar.HOUR_OF_DAY) + ":" + cl.get(Calendar.MINUTE) + ":" + cl.get(Calendar.SECOND) + 0;
+            if (cl.get(Calendar.SECOND) == 0) {
+                time.concat("0");
+            }
 
             messageBuilder.append(weather.getString("description"));
             messageBuilder.setCharAt(0, Character.toTitleCase(messageBuilder.charAt(0)));
