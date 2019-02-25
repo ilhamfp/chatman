@@ -10,7 +10,7 @@ ChatMan is a chat messaging app with built-in multi purpose chatbot providing va
 Built for ITB-IF3111 class assignment.  
 
 ## Display
-<p align="center"> <img src="photoshop_assets/login_page.png" alt="login_page" width="250"/>  <img src="photoshop_assets/bot_chatroom.png" alt="bot_chatroom" width="250"/> </p>  
+<p align="center"> <img src="photoshop_assets/Readme_Screenshot/login_page.png" alt="login_page" width="250"/>  <img src="photoshop_assets/Readme_Screenshot/bot_chatroom.png" alt="bot_chatroom" width="250"/> </p>  
 
 ## How to Install
 1. Export  `ChatMan.apk` to an Android device.
@@ -23,4 +23,22 @@ npm install && node app.js
 ```
 
 4. Run the app
+
+## Features
+
+### Chat
+Realtime messaging with another ChatMan user
+
+<p align="center"> <img src="photoshop_assets/Readme_Screenshot/chat_0.png" alt="chat_0" width="250"/> <img src="photoshop_assets/Readme_Screenshot/chat_1.png" alt="chat_1" width="250"/> </p>
+
+### Detection Service
+Detect and remind you when you are too close to the screen and using face down
+
+<p align="center"> <img src="photoshop_assets/Readme_Screenshot/service.png" alt="service" width="250"/>
+
+### Weather Today
+
+### Compass
+
+### Send Email
 
