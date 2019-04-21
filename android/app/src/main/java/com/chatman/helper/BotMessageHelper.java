@@ -38,6 +38,12 @@ public class BotMessageHelper {
                 new WeatherService(context).execute(gps.getLocation());
             }
         }
+        else if (message.toLowerCase().equals("kunci pintu")) {
+            sendBotMessage(context, "Pintu terkunci!");
+        }
+        else if (message.toLowerCase().equals("buka pintu")) {
+            sendBotMessage(context, "Pintu terbuka");
+        }
         else if (message.split(" ", 2)[0].toLowerCase().equals("email")) {
             String arr[] = message.split(" ", 3);
             Intent intent = new Intent(Intent.ACTION_SENDTO);
