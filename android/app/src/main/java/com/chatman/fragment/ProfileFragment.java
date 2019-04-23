@@ -85,7 +85,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-
+        Glide.with(this).load(getImage("ic_android_black_96dp")).fitCenter().into(profileImage);
         profileName.setText(PreferencesHelper.getUserName(getContext()));
 
     }
