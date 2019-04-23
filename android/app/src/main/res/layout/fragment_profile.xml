@@ -19,7 +19,8 @@
             android:layout_margin="20dp"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:src="@mipmap/ic_launcher_round"/>
 
         <TextView
             android:id="@+id/profile_name"

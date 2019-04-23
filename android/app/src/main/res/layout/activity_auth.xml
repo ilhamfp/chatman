@@ -27,7 +27,8 @@
                 android:id="@+id/auth_logo"
                 android:layout_width="250dp"
                 android:layout_height="120dp"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter"
+                android:src="@drawable/logo"/>
 
         </LinearLayout>
 
