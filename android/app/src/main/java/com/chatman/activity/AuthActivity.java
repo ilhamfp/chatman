@@ -87,7 +87,9 @@ public class AuthActivity extends AppCompatActivity {
         loadingDialog = new LoadingDialogFragment(this);
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
+
         Glide.with(this).load(getImage("logo")).fitCenter().into(authImageView);
+
     }
 
     // do login
